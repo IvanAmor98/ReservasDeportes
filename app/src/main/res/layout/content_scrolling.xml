@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.MainMenuActivity"
+    tools:showIn="@layout/main_menu_activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnListFacilities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_btnListFacilities" />
+
+        <Button
+            android:id="@+id/btnListBookings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_btnListBookings" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

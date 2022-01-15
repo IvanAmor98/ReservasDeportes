@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rowItem"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border"
+    android:orientation="vertical">
+
+    <TableRow
+        android:id="@+id/rowHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/inner_border">
+
+        <TextView
+            android:id="@+id/listViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:height="40sp"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/rowBody"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/inner_border">
+
+        <Button
+            android:id="@+id/listViewBook"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#5C5C5C"
+            android:backgroundTintMode="add"
+            android:elegantTextHeight="true"
+            android:freezesText="true"
+            android:maxLines="1"
+            android:nestedScrollingEnabled="false"
+            android:text="@string/list_view_booking"
+            android:textAlignment="center"
+            android:textColor="#3F51B5"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/listViewFind"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#5C5C5C"
+            android:backgroundTintMode="src_over"
+            android:text="@string/list_view_find"
+            android:textColor="#3F51B5"
+            android:textSize="11sp" />
+    </TableRow>
+
+</TableLayout>

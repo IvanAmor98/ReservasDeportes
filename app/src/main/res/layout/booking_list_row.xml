@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rowItem"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border"
+    android:orientation="vertical"
+    android:paddingTop="5px"
+    android:paddingBottom="5px">
+
+    <TableRow
+        android:id="@+id/rowHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/listFacilityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="2"
+            android:height="40sp"
+            android:gravity="start|center_vertical"
+            android:maxLines="2"
+            android:padding="5px"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/listBookingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="2"
+            android:gravity="center_vertical|end"
+            android:maxLines="1"
+            android:padding="5px" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/rowTimes"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="1px">
+
+        <TextView
+            android:id="@+id/listTimeFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:height="25sp"
+            android:background="@drawable/inner_border"
+            android:gravity="start"
+            android:paddingStart="10sp" />
+
+        <TextView
+            android:id="@+id/listTimeTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:height="25sp"
+            android:background="@drawable/inner_border"
+            android:gravity="end"
+            android:paddingEnd="10sp" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/rowBody"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/payButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/list_bookings_pay"
+            android:textColor="#3F51B5"
+            android:textSize="14sp"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/listRowQR"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/list_bookings_qr"
+            android:textColor="#3F51B5"
+            android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/listRowDelete"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#5C5C5C"
+            android:backgroundTintMode="src_over"
+            android:text="@string/list_bookings_delete"
+            android:textColor="#3F51B5"
+            android:textSize="14sp" />
+    </TableRow>
+
+</TableLayout>
