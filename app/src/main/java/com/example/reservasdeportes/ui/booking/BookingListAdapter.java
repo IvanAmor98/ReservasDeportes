@@ -76,7 +76,7 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
                     bookingDTO.getTimeTo()[1])); }
 
             if (btnPay != null) {
-                if (bookingDTO.isPayed()) {
+                if (bookingDTO.isPaid()) {
                     btnPay.setVisibility(View.GONE);
                 } else {
                     btnPay.setOnClickListener(v -> {

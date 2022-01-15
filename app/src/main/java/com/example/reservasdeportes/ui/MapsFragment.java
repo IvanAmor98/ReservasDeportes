@@ -47,6 +47,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
     private FragmentMapsBinding binding;
     private FacilityDTO facilityDTO;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private LatLng latLng;
     private Location lastKnownLocation;
     private boolean firstLocation = true;
     private Circle me;
@@ -82,27 +83,36 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Add a marker in Sydney and move the camera
+        latLng = new LatLng(facilityDTO.getLatitude(), facilityDTO.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(latLng).title(facilityDTO.getName()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
+
         updateLocationUI();
         checkPermissions();
-
-        // Add a marker in Sydney and move the camera
-        LatLng latLng = new LatLng(facilityDTO.getLatitude(), facilityDTO.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(latLng).title(facilityDTO.getName()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     private void updateLocationUI() {
         if (mMap == null) {
             return;
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[] {
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            }, 1);
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            }
+        } else {
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
 
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     private void checkPermissions() {
@@ -112,8 +122,8 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
          */
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
                     getDeviceLocation();
                 }
             } else {
@@ -152,7 +162,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
     private void drawPosition() {
         me = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(-lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()))
-                .radius(10000)
+                .radius(10)
                 .strokeColor(Color.RED)
                 .fillColor(Color.RED));
     }
@@ -163,9 +173,11 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
         path.add(me.getCenter());
 
         GeoApiContext context = new GeoApiContext.Builder()
-                .apiKey("YOUR_API_KEY")
+                .apiKey("AIzaSyAGlglZewCPEl0PQIw7uOXY7OyW-ZugU_Y")
                 .build();
-        DirectionsApiRequest req = DirectionsApi.getDirections(context, "41.385064,2.173403", "40.416775,-3.70379");
+        DirectionsApiRequest req = DirectionsApi.getDirections(context,
+                "" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude(),
+                "" + latLng.latitude + "," + latLng.longitude);
         try {
             DirectionsResult res = req.await();
 

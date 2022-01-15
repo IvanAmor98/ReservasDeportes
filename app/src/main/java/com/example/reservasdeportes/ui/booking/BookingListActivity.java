@@ -64,7 +64,7 @@ public class BookingListActivity extends AppCompatActivity {
                                 new int[]{from.get(Calendar.YEAR), from.get(Calendar.MONTH), from.get(Calendar.DAY_OF_MONTH)},
                                 new int[]{from.get(Calendar.HOUR_OF_DAY), from.get(Calendar.MINUTE)},
                                 new int[]{to.get(Calendar.HOUR_OF_DAY), to.get(Calendar.MINUTE)},
-                                object.getBoolean("payed")
+                                object.getBoolean("paid")
                         ));
                     }
                     adapter.notifyDataSetChanged();

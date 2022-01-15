@@ -10,11 +10,75 @@
         android:id="@+id/payButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailPriceLabel"
         app:paypal_label="buy_now" />
+
+    <TextView
+        android:id="@+id/bookingDetailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Detalles de la reserva"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/startLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Hora inicio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bookingDetailLabel" />
+
+    <TextView
+        android:id="@+id/endLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="Hora final"
+        app:layout_constraintBottom_toBottomOf="@+id/startLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/startLabel" />
+
+    <TextView
+        android:id="@+id/detailStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/startLabel"
+        app:layout_constraintTop_toBottomOf="@+id/startLabel" />
+
+    <TextView
+        android:id="@+id/detailEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/endLabel"
+        app:layout_constraintTop_toBottomOf="@+id/endLabel" />
+
+    <TextView
+        android:id="@+id/detailPriceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Precio: "
+        app:layout_constraintStart_toStartOf="@+id/detailStart"
+        app:layout_constraintTop_toBottomOf="@+id/detailStart" />
+
+    <TextView
+        android:id="@+id/detailPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/detailPriceLabel"
+        app:layout_constraintEnd_toEndOf="@+id/detailEnd"
+        app:layout_constraintTop_toTopOf="@+id/detailPriceLabel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

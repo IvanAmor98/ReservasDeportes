@@ -104,7 +104,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
             bookingDTO.setDate(selectedDate);
             bookingDTO.setTimeFrom(selectedTime.getTimeFrom());
             bookingDTO.setTimeTo(selectedTime.getTimeTo());
-            bookingDTO.setPayed(false);
+            bookingDTO.setPaid(false);
 
             bookingService.saveAppointment(this, TAG, bookingDTO, new ServerCallback() {
                 @Override

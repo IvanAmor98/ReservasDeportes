@@ -40,7 +40,7 @@ public class BookingService {
             bookingData.put("facilityName", bookingDTO.getFacilityName());
             bookingData.put("timeFrom", calendarTimeFrom.getTimeInMillis());
             bookingData.put("timeTo", calendarTimeTo.getTimeInMillis());
-            bookingData.put("payed", bookingDTO.isPayed());
+            bookingData.put("paid", bookingDTO.isPaid());
 
             String requestBody = bookingData.toString();
 
@@ -221,6 +221,54 @@ public class BookingService {
 
             JSONObject bookingData = new JSONObject();
             bookingData.put("_id", bookingId);
+
+            String requestBody = bookingData.toString();
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
+                    response -> {
+                        try {
+                            serverCallback.onSuccess(response.getJSONObject("bookingResult"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    },
+                    error -> serverCallback.onError("ERROR: " + error)){
+
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json; charset=utf-8");
+                    return headers;
+                }
+
+                @Override
+                public byte[] getBody() {
+                    try {
+                        return requestBody.getBytes(StandardCharsets.UTF_8);
+                    } catch (Exception uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                                requestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            jsonObjectRequest.setTag(tag);
+            RequestQueueManager.getInstance(context).getRequestQueue().add(jsonObjectRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePaidById(Context context, String tag, String bookingId, ServerCallback serverCallback) {
+
+        try {
+            String endpoint = URL + "/updatePaidById";
+
+            JSONObject bookingData = new JSONObject();
+            bookingData.put("_id", bookingId);
+            bookingData.put("paid", true);
 
             String requestBody = bookingData.toString();
 

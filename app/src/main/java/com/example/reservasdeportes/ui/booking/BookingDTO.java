@@ -11,11 +11,11 @@ public class BookingDTO implements Parcelable {
     private int[] date;
     private int[] timeFrom;
     private int[] timeTo;
-    private boolean payed;
+    private boolean paid;
 
     public BookingDTO() { _id = null; }
 
-    public BookingDTO(String id, String userId, String facilityId, String facilityName, int[] date, int[] timeFrom, int[] timeTo, boolean payed) {
+    public BookingDTO(String id, String userId, String facilityId, String facilityName, int[] date, int[] timeFrom, int[] timeTo, boolean paid) {
         this._id = id;
         this.userId = userId;
         this.facilityId = facilityId;
@@ -23,7 +23,7 @@ public class BookingDTO implements Parcelable {
         this.date = date;
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
-        this.payed = payed;
+        this.paid = paid;
     }
 
 
@@ -35,7 +35,7 @@ public class BookingDTO implements Parcelable {
         date = in.createIntArray();
         timeFrom = in.createIntArray();
         timeTo = in.createIntArray();
-        payed = in.readInt() == 1;
+        paid = in.readInt() == 1;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class BookingDTO implements Parcelable {
         dest.writeIntArray(date);
         dest.writeIntArray(timeFrom);
         dest.writeIntArray(timeTo);
-        dest.writeInt(payed ? 1 : 0);
+        dest.writeInt(paid ? 1 : 0);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class BookingDTO implements Parcelable {
 
     public void setTimeTo(int[] timeTo) { this.timeTo = timeTo; }
 
-    public boolean isPayed() { return payed; }
+    public boolean isPaid() { return paid; }
 
-    public void setPayed(boolean payed) { this.payed = payed; }
+    public void setPaid(boolean paid) { this.paid = paid; }
 }
