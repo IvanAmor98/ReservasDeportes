@@ -14,12 +14,8 @@ class SignupResult {
     }
 
     @Nullable
-    Integer getSuccess() {
-        return success;
-    }
+    Integer getSuccess() { return success; }
 
     @Nullable
-    Integer getError() {
-        return error;
-    }
+    Integer getError() { return error; }
 }

@@ -24,27 +24,21 @@ public class LoggedUserData implements Parcelable {
     }
 
     public String getId() { return _id; }
+
     public String getEmail() { return email; }
-    public String getDisplayName() {
-        return displayName;
-    }
+
+    public String getDisplayName() { return displayName; }
 
     public static final Creator<LoggedUserData> CREATOR = new Creator<LoggedUserData>() {
         @Override
-        public LoggedUserData createFromParcel(Parcel in) {
-            return new LoggedUserData(in);
-        }
+        public LoggedUserData createFromParcel(Parcel in) { return new LoggedUserData(in); }
 
         @Override
-        public LoggedUserData[] newArray(int size) {
-            return new LoggedUserData[size];
-        }
+        public LoggedUserData[] newArray(int size) { return new LoggedUserData[size]; }
     };
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
+    public int describeContents() { return 0; }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

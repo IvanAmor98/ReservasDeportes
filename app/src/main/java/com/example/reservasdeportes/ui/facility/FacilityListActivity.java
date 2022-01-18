@@ -22,8 +22,6 @@ public class FacilityListActivity extends AppCompatActivity {
     private final String TAG = FacilityListActivity.class.toString();
     private final FacilityService facilityService = new FacilityService();
 
-    private FacilityListActivityBinding binding;
-
     ArrayList<FacilityDTO> facilities = new ArrayList<>();
     FacilityListAdapter adapter;
     ListView lvFacilities;
@@ -32,7 +30,7 @@ public class FacilityListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = FacilityListActivityBinding.inflate(getLayoutInflater());
+        FacilityListActivityBinding binding = FacilityListActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         adapter = new FacilityListAdapter(this, R.layout.facility_list_row, facilities);

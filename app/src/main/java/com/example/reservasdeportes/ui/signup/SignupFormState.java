@@ -29,21 +29,13 @@ class SignupFormState {
     }
 
     @Nullable
-    Integer getEmailError() {
-        return emailError;
-    }
+    Integer getEmailError() { return emailError; }
 
     @Nullable
-    Integer getUsernameError() {
-        return userNameError;
-    }
+    Integer getUsernameError() { return userNameError; }
 
     @Nullable
-    Integer getPasswordError() {
-        return passwordError;
-    }
+    Integer getPasswordError() { return passwordError; }
 
-    boolean isDataValid() {
-        return isDataValid;
-    }
+    boolean isDataValid() { return isDataValid; }
 }

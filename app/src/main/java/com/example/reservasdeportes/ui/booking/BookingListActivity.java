@@ -10,8 +10,6 @@ import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.BookingListActivityBinding;
 import com.example.reservasdeportes.services.BookingService;
-import com.example.reservasdeportes.ui.facility.FacilityDTO;
-import com.example.reservasdeportes.ui.facility.FacilityListActivity;
 import com.example.reservasdeportes.ui.login.LoggedUserData;
 
 import org.json.JSONArray;
@@ -26,23 +24,20 @@ public class BookingListActivity extends AppCompatActivity {
     private final String TAG = BookingListActivity.class.toString();
     private final BookingService bookingService = new BookingService();
 
-    private BookingListActivityBinding binding;
-
-    ArrayList<BookingDTO> bookings = new ArrayList<>();
-    BookingListAdapter adapter;
-    ListView lvBookings;
+    private final ArrayList<BookingDTO> bookings = new ArrayList<>();
+    private BookingListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = BookingListActivityBinding.inflate(getLayoutInflater());
+        BookingListActivityBinding binding = BookingListActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         LoggedUserData loggedUserData = getIntent().getParcelableExtra("loggedUserData");
 
         adapter = new BookingListAdapter(this, R.layout.booking_list_row, bookings);
-        lvBookings = binding.bookingList;
+        ListView lvBookings = binding.bookingList;
         lvBookings.setAdapter(adapter);
 
         bookingService.getAllByUser(this, TAG, loggedUserData.getId(), new ServerCallback() {

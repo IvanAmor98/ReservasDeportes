@@ -23,14 +23,13 @@ import com.example.reservasdeportes.databinding.MainMenuActivityBinding;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    private MainMenuActivityBinding binding;
     private LoggedUserData loggedUserData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = MainMenuActivityBinding.inflate(getLayoutInflater());
+        MainMenuActivityBinding binding = MainMenuActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         loggedUserData = getIntent().getParcelableExtra("loginUserData");

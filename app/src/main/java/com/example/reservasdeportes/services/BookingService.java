@@ -2,26 +2,19 @@ package com.example.reservasdeportes.services;
 
 import android.content.Context;
 
-import com.android.volley.Request;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.reservasdeportes.controller.RequestQueueManager;
+import com.example.reservasdeportes.controller.HttpService;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.ui.booking.BookingDTO;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BookingService {
 
     private final String URL = "http://10.0.2.2:8080/api/booking";
 
-    public void saveAppointment(Context context, String tag, BookingDTO bookingDTO, ServerCallback serverCallback) {
+    public void saveAppointment(Context context, String TAG, BookingDTO bookingDTO, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/newBooking";
@@ -44,75 +37,29 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
-                    response -> {
-                        try {
-                            serverCallback.onSuccess(response.getJSONObject("bookingResult"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    },
-                    error -> serverCallback.onError("ERROR: " + error)){
-
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    return headers;
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return requestBody.getBytes(StandardCharsets.UTF_8);
-                    } catch (Exception uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                requestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-
-            jsonObjectRequest.setTag(tag);
-            RequestQueueManager.getInstance(context).getRequestQueue().add(jsonObjectRequest);
+            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getReservedDates(Context context, String tag, ServerCallback serverCallback) {
+    public void getReservedDates(Context context, String TAG, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/getDates";
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
-                    response -> {
-                        try {
-                            serverCallback.onSuccess(response.getJSONObject("bookingResult"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    },
-                    error -> serverCallback.onError("ERROR: " + error)){
+            JSONObject bookingData = new JSONObject();
+            String requestBody = bookingData.toString();
 
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    return headers;
-                }
-            };
-
-            jsonObjectRequest.setTag(tag);
-            RequestQueueManager.getInstance(context).getRequestQueue().add(jsonObjectRequest);
+            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getReservedTimes(Context context, String tag, int[] selectedDate, ServerCallback serverCallback) {
+    public void getReservedTimes(Context context, String TAG, int[] selectedDate, ServerCallback serverCallback) {
         try {
             String endpoint = URL + "/getReservedTimes";
 
@@ -130,44 +77,14 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
-                    response -> {
-                        try {
-                            serverCallback.onSuccess(response.getJSONObject("bookingResult"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    },
-                    error -> serverCallback.onError("ERROR: " + error)){
-
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    return headers;
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return requestBody.getBytes(StandardCharsets.UTF_8);
-                    } catch (Exception uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                requestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-
-            jsonObjectRequest.setTag(tag);
-            RequestQueueManager.getInstance(context).getRequestQueue().add(jsonObjectRequest);
+            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getAllByUser(Context context, String tag, String userId, ServerCallback serverCallback) {
+    public void getAllByUser(Context context, String TAG, String userId, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/getAllByUser";
@@ -177,44 +94,14 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
-                    response -> {
-                        try {
-                            serverCallback.onSuccess(response.getJSONObject("bookingResult"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    },
-                    error -> serverCallback.onError("ERROR: " + error)){
-
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    return headers;
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return requestBody.getBytes(StandardCharsets.UTF_8);
-                    } catch (Exception uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                requestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-
-            jsonObjectRequest.setTag(tag);
-            RequestQueueManager.getInstance(context).getRequestQueue().add(jsonObjectRequest);
+            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void deleteById(Context context, String tag, String bookingId, ServerCallback serverCallback) {
+    public void deleteById(Context context, String TAG, String bookingId, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/deleteById";
@@ -224,44 +111,14 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
-                    response -> {
-                        try {
-                            serverCallback.onSuccess(response.getJSONObject("bookingResult"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    },
-                    error -> serverCallback.onError("ERROR: " + error)){
-
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    return headers;
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return requestBody.getBytes(StandardCharsets.UTF_8);
-                    } catch (Exception uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                requestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-
-            jsonObjectRequest.setTag(tag);
-            RequestQueueManager.getInstance(context).getRequestQueue().add(jsonObjectRequest);
+            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updatePaidById(Context context, String tag, String bookingId, ServerCallback serverCallback) {
+    public void updatePaidById(Context context, String TAG, String bookingId, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/updatePaidById";
@@ -272,37 +129,7 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
-                    response -> {
-                        try {
-                            serverCallback.onSuccess(response.getJSONObject("bookingResult"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    },
-                    error -> serverCallback.onError("ERROR: " + error)){
-
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json; charset=utf-8");
-                    return headers;
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return requestBody.getBytes(StandardCharsets.UTF_8);
-                    } catch (Exception uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                requestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-
-            jsonObjectRequest.setTag(tag);
-            RequestQueueManager.getInstance(context).getRequestQueue().add(jsonObjectRequest);
+            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();

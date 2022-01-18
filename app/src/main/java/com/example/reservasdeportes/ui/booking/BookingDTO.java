@@ -51,41 +51,25 @@ public class BookingDTO implements Parcelable {
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
+    public int describeContents() { return 0; }
 
     public static final Creator<BookingDTO> CREATOR = new Creator<BookingDTO>() {
         @Override
-        public BookingDTO createFromParcel(Parcel in) {
-            return new BookingDTO(in);
-        }
+        public BookingDTO createFromParcel(Parcel in) { return new BookingDTO(in); }
 
         @Override
-        public BookingDTO[] newArray(int size) {
-            return new BookingDTO[size];
-        }
+        public BookingDTO[] newArray(int size) { return new BookingDTO[size]; }
     };
 
-    public String getId() {
-        return _id;
-    }
+    public String getId() { return _id; }
 
-    public String getUserId() {
-        return userId;
-    }
+    public String getUserId() { return userId; }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+    public void setUserId(String userId) { this.userId = userId; }
 
-    public String getFacilityId() {
-        return facilityId;
-    }
+    public String getFacilityId() { return facilityId; }
 
-    public void setFacilityId(String facilityId) {
-        this.facilityId = facilityId;
-    }
+    public void setFacilityId(String facilityId) { this.facilityId = facilityId; }
 
     public String getFacilityName() { return facilityName; }
 

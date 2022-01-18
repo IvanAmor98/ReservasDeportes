@@ -9,12 +9,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.reservasdeportes.R;
-import com.example.reservasdeportes.services.FacilityService;
+import com.example.reservasdeportes.controller.HttpService;
 import com.example.reservasdeportes.services.UserService;
 import com.example.reservasdeportes.controller.ServerCallback;
 
 import org.json.JSONObject;
-
 
 public class SignupViewModel extends ViewModel {
 
@@ -65,7 +64,7 @@ public class SignupViewModel extends ViewModel {
     }
 
     public void cancelRequest(Context context, String TAG) {
-        FacilityService.cancelRequest(context, TAG);
+        HttpService.cancelRequest(context, TAG);
     }
 
     private boolean isEmailValid(String email) {

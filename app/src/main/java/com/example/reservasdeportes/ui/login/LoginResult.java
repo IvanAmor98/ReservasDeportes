@@ -16,12 +16,8 @@ class LoginResult {
     LoginResult(@Nullable LoggedUserData success) { this.success = success; }
 
     @Nullable
-    LoggedUserData getSuccess() {
-        return success;
-    }
+    LoggedUserData getSuccess() { return success; }
 
     @Nullable
-    Integer getError() {
-        return error;
-    }
+    Integer getError() { return error; }
 }

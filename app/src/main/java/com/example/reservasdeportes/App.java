@@ -2,7 +2,6 @@ package com.example.reservasdeportes;
 
 import android.app.Application;
 import android.os.Build;
-import android.os.StrictMode;
 
 import androidx.annotation.RequiresApi;
 

@@ -2,7 +2,6 @@ package com.example.reservasdeportes.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -27,7 +26,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
@@ -44,7 +42,6 @@ import java.util.List;
 public class MapsFragment extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private FragmentMapsBinding binding;
     private FacilityDTO facilityDTO;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LatLng latLng;
@@ -52,13 +49,13 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
     private boolean firstLocation = true;
     private Circle me;
 
-    private final float DEFAULT_ZOOM = 1;
+    private final float DEFAULT_ZOOM = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = FragmentMapsBinding.inflate(getLayoutInflater());
+        FragmentMapsBinding binding = FragmentMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -67,6 +64,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
     }
 
@@ -80,13 +78,13 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
         latLng = new LatLng(facilityDTO.getLatitude(), facilityDTO.getLongitude());
         mMap.addMarker(new MarkerOptions().position(latLng).title(facilityDTO.getName()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
 
         updateLocationUI();
         checkPermissions();
@@ -116,10 +114,6 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void checkPermissions() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -136,24 +130,20 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
 
     private void getDeviceLocation() {
         @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-        locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
-                    // Set the map's camera position to the current location of the device.
-                    lastKnownLocation = task.getResult();
-                    if (lastKnownLocation != null) {
-                        if (firstLocation) {
-                            drawPosition();
-                            firstLocation = false;
-                        }
-                        me.setCenter(new LatLng(lastKnownLocation.getLatitude(),
-                                lastKnownLocation.getLongitude()));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                new LatLng(lastKnownLocation.getLatitude(),
-                                        lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                        drawRoute();
+        locationResult.addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                lastKnownLocation = task.getResult();
+                if (lastKnownLocation != null) {
+                    if (firstLocation) {
+                        drawPosition();
+                        firstLocation = false;
                     }
+                    me.setCenter(new LatLng(lastKnownLocation.getLatitude(),
+                            lastKnownLocation.getLongitude()));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(lastKnownLocation.getLatitude(),
+                                    lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                    drawRoute();
                 }
             }
         });
@@ -168,7 +158,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void drawRoute() {
-        List<LatLng> path = new ArrayList();
+        List<LatLng> path = new ArrayList<>();
         path.add(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
         path.add(me.getCenter());
 
@@ -230,6 +220,6 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(me.getCenter(), 1));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(me.getCenter(), DEFAULT_ZOOM));
     }
 }

@@ -3,7 +3,6 @@ package com.example.reservasdeportes.services;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;

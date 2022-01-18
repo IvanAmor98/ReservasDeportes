@@ -1,0 +1,74 @@
+package com.example.reservasdeportes.controller;
+
+import android.content.Context;
+
+import com.android.volley.Request;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+
+public class HttpService {
+
+    public static void addPetition(Context context, String TAG, String endpoint, String requestBody, ServerCallback serverCallback) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
+                response -> {
+                    try {
+                        serverCallback.onSuccess(response.getJSONObject("result"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> serverCallback.onError("ERROR: " + error)){
+
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    return requestBody.getBytes(StandardCharsets.UTF_8);
+                } catch (Exception uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            requestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 5;
+            }
+
+            @Override
+            public void retry(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        jsonObjectRequest.setTag(TAG);
+        RequestQueueManager.getInstance(context).getRequestQueue().add(jsonObjectRequest);
+
+    }
+
+    public static void cancelRequest(Context context, String TAG) {
+        RequestQueueManager.getInstance(context).getRequestQueue().cancelAll(TAG);
+    }
+}

@@ -51,11 +51,7 @@ public class BookingViewModel {
         }
 
         calendarStart.add(Calendar.MINUTE, 30);
-        if (calendarStart.compareTo(calendarEnd) <= 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return calendarStart.compareTo(calendarEnd) <= 0;
     }
 
     public void bookingTimeFromChanged(String timeFrom) {

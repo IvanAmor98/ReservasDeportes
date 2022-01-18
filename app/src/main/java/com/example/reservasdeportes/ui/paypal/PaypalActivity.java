@@ -21,7 +21,6 @@ import com.paypal.checkout.order.Amount;
 import com.paypal.checkout.order.AppContext;
 import com.paypal.checkout.order.Order;
 import com.paypal.checkout.order.PurchaseUnit;
-import com.paypal.checkout.paymentbutton.PayPalButton;
 
 import org.json.JSONObject;
 

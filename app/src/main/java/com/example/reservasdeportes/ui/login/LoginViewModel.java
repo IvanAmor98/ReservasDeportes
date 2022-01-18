@@ -8,6 +8,7 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.example.reservasdeportes.controller.HttpService;
 import com.example.reservasdeportes.services.FacilityService;
 import com.example.reservasdeportes.services.UserService;
 import com.example.reservasdeportes.controller.ServerCallback;
@@ -69,7 +70,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void cancelRequest(Context context, String TAG) {
-        FacilityService.cancelRequest(context, TAG);
+        HttpService.cancelRequest(context, TAG);
     }
 
     private boolean isEmailValid(String email) {

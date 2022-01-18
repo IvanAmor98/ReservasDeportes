@@ -7,8 +7,8 @@ import androidx.annotation.Nullable;
  */
 class LoginFormState {
     @Nullable
-    private Integer emailError;
-    private boolean isDataValid;
+    private final Integer emailError;
+    private final boolean isDataValid;
 
     LoginFormState(@Nullable Integer emailError) {
         this.emailError = emailError;
@@ -21,11 +21,7 @@ class LoginFormState {
     }
 
     @Nullable
-    Integer getEmailError() {
-        return emailError;
-    }
+    Integer getEmailError() { return emailError; }
 
-    boolean isDataValid() {
-        return isDataValid;
-    }
+    boolean isDataValid() { return isDataValid; }
 }

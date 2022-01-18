@@ -14,18 +14,12 @@ public class ReservedTime {
         this.timeTo = timeTo;
     }
 
-    public int[] getTimeFrom() {
-        return timeFrom;
-    }
+    public int[] getTimeFrom() { return timeFrom; }
 
     @Nullable
-    public int[] getTimeTo() {
-        return timeTo;
-    }
+    public int[] getTimeTo() { return timeTo; }
 
-    public void setTimeTo(@Nullable int[] timeTo) {
-        this.timeTo = timeTo;
-    }
+    public void setTimeTo(@Nullable int[] timeTo) { this.timeTo = timeTo; }
 
     @Override
     public boolean equals(Object o) {

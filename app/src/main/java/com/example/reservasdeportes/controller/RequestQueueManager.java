@@ -1,13 +1,15 @@
 package com.example.reservasdeportes.controller;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 public class RequestQueueManager {
+    @SuppressLint("StaticFieldLeak")
     private static RequestQueueManager instance;
-    private static Context context;
+    private final Context context;
     private RequestQueue requestQueue;
 
     private RequestQueueManager(Context ctx) {
