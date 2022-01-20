@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">ec2-18-169-192-120.eu-west-2.compute.amazonaws.com</domain>
+        <domain includeSubdomains="true">ec2-18-168-204-141.eu-west-2.compute.amazonaws.com</domain>
         <domain includeSubdomains="true">10.0.2.2</domain>
         <domain includeSubdomains="true">localhost</domain>
     </domain-config>

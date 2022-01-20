@@ -12,7 +12,7 @@ import java.util.Calendar;
 
 public class BookingService {
 
-    private final String URL = "http://10.0.2.2:8080/api/booking";
+    private final String URL = "/booking";
 
     public void saveAppointment(Context context, String TAG, BookingDTO bookingDTO, ServerCallback serverCallback) {
 

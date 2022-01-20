@@ -16,8 +16,11 @@ import java.util.Map;
 
 public class HttpService {
 
+    private static final String URL = "http://ec2-18-168-204-141.eu-west-2.compute.amazonaws.com/api";
+    //private static final String URL = "http://10.0.2.2:8080/api/facility";
+
     public static void addPetition(Context context, String TAG, String endpoint, String requestBody, ServerCallback serverCallback) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, endpoint, null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL + endpoint, null,
                 response -> {
                     try {
                         serverCallback.onSuccess(response.getJSONObject("result"));

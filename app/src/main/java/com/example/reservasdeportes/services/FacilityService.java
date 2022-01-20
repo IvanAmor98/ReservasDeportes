@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class FacilityService {
 
-    private final String URL = "http://10.0.2.2:8080/api/facility";
+    private final String URL = "/facility";
 
     public void getFacilityById(Context context, String TAG, String facilityId, ServerCallback serverCallback) {
 

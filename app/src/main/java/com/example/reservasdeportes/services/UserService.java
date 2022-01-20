@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class UserService {
 
-    private final String URL = "http://10.0.2.2:8080/api/user";
+    private final String URL = "/user";
 
     public void login(String email, String password, Context context, String TAG, ServerCallback serverCallback) {
 
