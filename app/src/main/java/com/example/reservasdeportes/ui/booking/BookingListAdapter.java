@@ -61,17 +61,17 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
             if (facilityName != null) { facilityName.setText(bookingDTO.getFacilityName()); }
 
             if (bookingDate != null) {
-                bookingDate.setText(String.format(Locale.getDefault(), "%d/%d/%d",
+                bookingDate.setText(String.format(Locale.getDefault(), "%02d/%02d/%02d",
                     bookingDTO.getDate()[2],
                     bookingDTO.getDate()[1] + 1,
                     bookingDTO.getDate()[0]));
             }
 
-            if (timeFrom != null) { timeFrom.setText(String.format(Locale.getDefault(), "From: %d:%d",
+            if (timeFrom != null) { timeFrom.setText(String.format(Locale.getDefault(), "From: %02d:%02d",
                     bookingDTO.getTimeFrom()[0],
                     bookingDTO.getTimeFrom()[1])); }
 
-            if (timeTo != null) { timeTo.setText(String.format(Locale.getDefault(), "To: %d:%d",
+            if (timeTo != null) { timeTo.setText(String.format(Locale.getDefault(), "To: %02d:%02d",
                     bookingDTO.getTimeTo()[0],
                     bookingDTO.getTimeTo()[1])); }
 
@@ -82,6 +82,7 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
                     btnPay.setOnClickListener(v -> {
                         Intent intent = new Intent(mContext, PaypalActivity.class);
                         intent.putExtra("bookingDTO", bookingDTO);
+                        intent.putExtra("loggedUserData", ((BookingListActivity)mContext).loggedUserData);
                         mContext.startActivity(intent);
                     });
                 }
@@ -102,7 +103,7 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
                             .setMessage(R.string.alert_delete)
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setPositiveButton(android.R.string.yes, (dialog, whichButton) ->
-                                new BookingService().deleteById(mContext, TAG, bookingDTO.getId(), new ServerCallback() {
+                                new BookingService().deleteById(mContext, TAG, ((BookingListActivity)mContext).loggedUserData.getToken(), bookingDTO.getId(), new ServerCallback() {
                                     @Override
                                     public void onSuccess(JSONObject result) {
                                         Toast.makeText(mContext, R.string.booking_delete_success, Toast.LENGTH_LONG).show();

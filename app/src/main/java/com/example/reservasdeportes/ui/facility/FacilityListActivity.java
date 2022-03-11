@@ -10,6 +10,7 @@ import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.services.FacilityService;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.FacilityListActivityBinding;
+import com.example.reservasdeportes.ui.login.LoggedUserData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +24,7 @@ public class FacilityListActivity extends AppCompatActivity {
     private final FacilityService facilityService = new FacilityService();
 
     ArrayList<FacilityDTO> facilities = new ArrayList<>();
+    LoggedUserData loggedUserData;
     FacilityListAdapter adapter;
     ListView lvFacilities;
 
@@ -33,11 +35,13 @@ public class FacilityListActivity extends AppCompatActivity {
         FacilityListActivityBinding binding = FacilityListActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
+
         adapter = new FacilityListAdapter(this, R.layout.facility_list_row, facilities);
         lvFacilities = binding.facilityList;
         lvFacilities.setAdapter(adapter);
 
-        facilityService.getFacilityList(this, TAG, new ServerCallback() {
+        facilityService.getFacilityList(this, TAG, loggedUserData.getToken(), new ServerCallback() {
             @Override
             public void onSuccess(JSONObject result) {
                 try {

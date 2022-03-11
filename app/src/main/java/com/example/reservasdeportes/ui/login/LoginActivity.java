@@ -7,10 +7,14 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -19,18 +23,108 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.LoginActivityBinding;
+import com.example.reservasdeportes.services.UserService;
 import com.example.reservasdeportes.ui.MainMenuActivity;
 import com.example.reservasdeportes.ui.signup.SignupActivity;
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
     private final String TAG = LoginActivity.class.toString();
     private LoginViewModel loginViewModel;
+    private SignInClient oneTapClient;
+    private BeginSignInRequest signInRequest;
+
+    private final ActivityResultLauncher<IntentSenderRequest> loginResultHandler = registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result -> {
+        // handle intent result here
+        if (result.getResultCode() == RESULT_OK) Log.d(TAG, "RESULT_OK.");
+        if (result.getResultCode() == RESULT_CANCELED) Log.d(TAG, "RESULT_CANCELED.");
+        if (result.getResultCode() == RESULT_FIRST_USER) Log.d(TAG, "RESULT_FIRST_USER.");
+        try {
+            SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(result.getData());
+            String idToken = credential.getGoogleIdToken();
+            String username = credential.getId();
+            String password = credential.getPassword();
+
+            if (idToken !=  null) {
+                // Got an ID token from Google. Use it to authenticate
+                // with your backend.
+                new UserService().googleLogin(idToken, username, password, this, TAG, new ServerCallback() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+                        try {
+                            LoggedUserData userData = new LoggedUserData(
+                                    result.getJSONObject("successData").getString("_id"),
+                                    result.getJSONObject("successData").getString("email"),
+                                    result.getJSONObject("successData").getString("username"),
+                                    result.getJSONObject("successData").getString("token"));
+                            saveLoginData(userData);
+                            startMainActivity(userData);
+                        } catch (Exception e) {
+                            Toast.makeText(LoginActivity.this, "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(LoginActivity.this, "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, error);
+                    }
+                });
+            } else if (password != null) {
+                // Got a saved username and password. Use them to authenticate
+                // with your backend.
+                Log.d(TAG, "Got password.");
+            }
+        } catch (ApiException e) {
+            switch (e.getStatusCode()) {
+                case CommonStatusCodes.CANCELED:
+                    Log.d(TAG, "One-tap dialog was closed.");
+                    // Don't re-prompt the user.
+                    //showOneTapUI = false;
+                    break;
+                case CommonStatusCodes.NETWORK_ERROR:
+                    Log.d(TAG, "One-tap encountered a network error.");
+                    // Try again or just ignore.
+                    break;
+                default:
+                    Log.d(TAG, "Couldn't get credential from result."
+                            + e.getLocalizedMessage());
+                    break;
+            }
+        }
+    });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        oneTapClient = Identity.getSignInClient(this);
+        signInRequest = BeginSignInRequest.builder()
+                .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
+                        .setSupported(true)
+                        .build())
+                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        // Your server's client ID, not your Android client ID.
+                        .setServerClientId("398083326352-mcce8uhaf9golv4h6avm65uneijtljt7.apps.googleusercontent.com")
+                        // Only show accounts previously used to sign in.
+                        .setFilterByAuthorizedAccounts(false)
+                        .build())
+                // Automatically sign in when exactly one credential is retrieved.
+                .setAutoSelectEnabled(false)
+                .build();
 
         checkPermissions();
         checkLoggedIn();
@@ -45,6 +139,23 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = binding.login;
         final TextView signupButton = binding.signup;
         final ProgressBar progressBar = binding.loading;
+        final SignInButton signInButton = binding.signInButton;
+
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setOnClickListener(v -> oneTapClient.beginSignIn(signInRequest)
+                .addOnSuccessListener(this, result -> {
+                    try {
+                        loginResultHandler.launch(new IntentSenderRequest.Builder(result.getPendingIntent().getIntentSender()).build());
+                    } catch(android.content.ActivityNotFoundException e){
+                        e.printStackTrace();
+                        Log.e(TAG, "Error: " + e.getLocalizedMessage());
+                    }
+                })
+                .addOnFailureListener(this, e -> {
+                    // No saved credentials found. Launch the One Tap sign-up flow, or
+                    // do nothing and continue presenting the signed-out UI.
+                    Toast.makeText(this, "Hubo un error", Toast.LENGTH_SHORT).show();
+                }));
 
         loginViewModel.getLoginFormState().observe(this, loginFormState -> {
             if (loginFormState == null) {
@@ -123,7 +234,7 @@ public class LoginActivity extends AppCompatActivity {
         //loginViewModel.cancelRequest(this, TAG);
 
         Intent intent = new Intent(this, MainMenuActivity.class);
-        intent.putExtra("loginUserData", loggedUserData);
+        intent.putExtra("loggedUserData", loggedUserData);
         startActivity(intent);
         finish();
     }
@@ -137,7 +248,8 @@ public class LoginActivity extends AppCompatActivity {
         if(currentTime - timeOfLastLogin < 5*60*1000) startMainActivity(new LoggedUserData(
                 sharedPreferences.getString("_id", ""),
                 sharedPreferences.getString("email", ""),
-                sharedPreferences.getString("user", "")));
+                sharedPreferences.getString("user", ""),
+                sharedPreferences.getString("token", "")));
     }
 
     private void saveLoginData(LoggedUserData loggedUserData) {
@@ -146,6 +258,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("_id", loggedUserData.getId());
         editor.putString("email", loggedUserData.getEmail());
         editor.putString("user", loggedUserData.getDisplayName());
+        editor.putString("token", loggedUserData.getToken());
         editor.putLong("lastLogin", System.currentTimeMillis());
 
         editor.apply();

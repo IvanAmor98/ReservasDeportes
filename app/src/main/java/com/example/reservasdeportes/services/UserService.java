@@ -22,7 +22,26 @@ public class UserService {
 
             String requestBody = loginData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, null, endpoint, requestBody, serverCallback);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void googleLogin(String googleToken, String email, String password, Context context, String TAG, ServerCallback serverCallback) {
+
+        try {
+            String endpoint = URL + "/googleLogin";
+
+            JSONObject loginData = new JSONObject();
+            loginData.put("googleToken", googleToken);
+            loginData.put("email", email);
+            loginData.put("password", password);
+
+            String requestBody = loginData.toString();
+
+            HttpService.addPetition(context, TAG, null, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,7 +60,7 @@ public class UserService {
 
             String requestBody = signupData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, null, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();

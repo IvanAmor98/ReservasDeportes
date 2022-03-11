@@ -26,6 +26,7 @@ public class BookingListActivity extends AppCompatActivity {
 
     private final ArrayList<BookingDTO> bookings = new ArrayList<>();
     private BookingListAdapter adapter;
+    LoggedUserData loggedUserData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +35,13 @@ public class BookingListActivity extends AppCompatActivity {
         BookingListActivityBinding binding = BookingListActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        LoggedUserData loggedUserData = getIntent().getParcelableExtra("loggedUserData");
+        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
 
         adapter = new BookingListAdapter(this, R.layout.booking_list_row, bookings);
         ListView lvBookings = binding.bookingList;
         lvBookings.setAdapter(adapter);
 
-        bookingService.getAllByUser(this, TAG, loggedUserData.getId(), new ServerCallback() {
+        bookingService.getAllByUser(this, TAG, loggedUserData.getToken(), loggedUserData.getId(), new ServerCallback() {
             @Override
             public void onSuccess(JSONObject result) {
                 try {

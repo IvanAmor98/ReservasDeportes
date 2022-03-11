@@ -12,6 +12,7 @@ import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.PaypalActivityBinding;
 import com.example.reservasdeportes.services.BookingService;
 import com.example.reservasdeportes.ui.booking.BookingDTO;
+import com.example.reservasdeportes.ui.login.LoggedUserData;
 import com.paypal.checkout.createorder.CreateOrderActions;
 import com.paypal.checkout.createorder.CurrencyCode;
 import com.paypal.checkout.createorder.OrderIntent;
@@ -34,6 +35,7 @@ public class PaypalActivity extends AppCompatActivity implements ServerCallback 
     private final float PRICE_FIVE_MINUTES = 0.5F;
     private BookingDTO bookingDTO;
     private BookingService bookingService;
+    private LoggedUserData loggedUserData;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -44,9 +46,10 @@ public class PaypalActivity extends AppCompatActivity implements ServerCallback 
 
         bookingService = new BookingService();
         bookingDTO = getIntent().getParcelableExtra("bookingDTO");
+        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
 
-        binding.detailStart.setText(String.format(Locale.getDefault(), "%d:%d", bookingDTO.getTimeFrom()[0], bookingDTO.getTimeFrom()[1]));
-        binding.detailEnd.setText(String.format(Locale.getDefault(), "%d:%d", bookingDTO.getTimeTo()[0], bookingDTO.getTimeTo()[1]));
+        binding.detailStart.setText(String.format(Locale.getDefault(), "%02d:%02d", bookingDTO.getTimeFrom()[0], bookingDTO.getTimeFrom()[1]));
+        binding.detailEnd.setText(String.format(Locale.getDefault(), "%02d:%02d", bookingDTO.getTimeTo()[0], bookingDTO.getTimeTo()[1]));
 
         Calendar calendarFrom = Calendar.getInstance();
         calendarFrom.clear();
@@ -66,7 +69,7 @@ public class PaypalActivity extends AppCompatActivity implements ServerCallback 
         }
         float price = count * PRICE_FIVE_MINUTES;
 
-        binding.detailPrice.setText(String.format(Locale.getDefault(), "%f€", price));
+        binding.detailPrice.setText(String.format(Locale.getDefault(), "%1$,.2f€", price));
 
         binding.payButton.setup(
                 createOrderActions -> {
@@ -92,7 +95,7 @@ public class PaypalActivity extends AppCompatActivity implements ServerCallback 
                     createOrderActions.create(order, (CreateOrderActions.OnOrderCreated) null);
                 },
                 approval -> approval.getOrderActions().capture(result -> {
-                    bookingService.updatePaidById(this, TAG, bookingDTO.getId(), this);
+                    bookingService.updatePaidById(this, TAG, loggedUserData.getToken(), bookingDTO.getId(), this);
                 }), null,
                 () -> Log.d("OnCancel", "Buyer cancelled the PayPal experience."),
                 errorInfo -> Log.d("OnError", String.format("Error: %s", errorInfo))
@@ -111,6 +114,6 @@ public class PaypalActivity extends AppCompatActivity implements ServerCallback 
     @Override
     public void onError(String error) {
         Toast.makeText(PaypalActivity.this, "ERROR: " + error, Toast.LENGTH_SHORT).show();
-        bookingService.updatePaidById(this, TAG, bookingDTO.getId(), this);
+        bookingService.updatePaidById(this, TAG, loggedUserData.getToken(), bookingDTO.getId(), this);
     }
 }

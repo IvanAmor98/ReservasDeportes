@@ -40,7 +40,8 @@ public class LoginViewModel extends ViewModel {
                         loginResult.setValue(new LoginResult(new LoggedUserData(
                                 result.getJSONObject("successData").getString("_id"),
                                 result.getJSONObject("successData").getString("email"),
-                                result.getJSONObject("successData").getString("username")
+                                result.getJSONObject("successData").getString("username"),
+                                result.getJSONObject("successData").getString("token")
                         )));
                     } else {
                         Log.e("LoginResponse", result.getString("errorData"));

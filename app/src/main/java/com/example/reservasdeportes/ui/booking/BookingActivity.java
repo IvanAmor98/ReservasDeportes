@@ -23,6 +23,7 @@ import com.example.reservasdeportes.databinding.BookingActivityBinding;
 import com.example.reservasdeportes.services.BookingService;
 import com.example.reservasdeportes.services.NotificationService;
 import com.example.reservasdeportes.ui.facility.FacilityDTO;
+import com.example.reservasdeportes.ui.login.LoggedUserData;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.Timepoint;
@@ -42,6 +43,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
 
     private final String TAG = BookingActivity.class.toString();
     private BookingViewModel bookingViewModel;
+    private LoggedUserData loggedUserData;
     BookingService bookingService = new BookingService();
     BookingActivityBinding binding;
     DatePickerDialog datePickerDialog;
@@ -63,6 +65,8 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
 
         binding = BookingActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
 
         bookingViewModel = new BookingViewModel();
 
@@ -106,7 +110,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
             bookingDTO.setTimeTo(selectedTime.getTimeTo());
             bookingDTO.setPaid(false);
 
-            bookingService.saveAppointment(this, TAG, bookingDTO, new ServerCallback() {
+            bookingService.saveAppointment(this, TAG, loggedUserData.getToken(), bookingDTO, new ServerCallback() {
                 @Override
                 public void onSuccess(JSONObject result) {
                     try {
@@ -219,7 +223,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         selectedDate = new int[]{year, monthOfYear, dayOfMonth};
-        bookingService.getReservedTimes(this, TAG, selectedDate, new ServerCallback() {
+        bookingService.getReservedTimes(this, TAG, loggedUserData.getToken(), selectedDate, new ServerCallback() {
             @Override
             public void onSuccess(JSONObject result) {
                 try {
@@ -384,19 +388,22 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
 
         Calendar now = Calendar.getInstance();
 
-        if (calendar.compareTo(now) >= 0)
-        new AlertDialog.Builder(BookingActivity.this)
-                .setTitle(R.string.alert_title)
-                .setMessage(R.string.alert_alarm)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
-                    setAlarm(calendar);
-                    Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), "Alarm set on: %d/%d/%d %d:%d",
-                            calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)), Toast.LENGTH_LONG).show();
-                    finish();
-                })
-                .setNegativeButton(android.R.string.no, (dialog, witchButton) -> finish()).show();
+        if (calendar.compareTo(now) >= 0) {
+            new AlertDialog.Builder(BookingActivity.this)
+                    .setTitle(R.string.alert_title)
+                    .setMessage(R.string.alert_alarm)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+                        setAlarm(calendar);
+                        Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), "Alarm set on: %d/%d/%d %d:%d",
+                                calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR),
+                                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)), Toast.LENGTH_LONG).show();
+                        finish();
+                    })
+                    .setNegativeButton(android.R.string.no, (dialog, witchButton) -> finish()).show();
+        } else {
+            finish();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

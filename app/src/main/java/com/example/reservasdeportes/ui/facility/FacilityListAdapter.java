@@ -52,18 +52,13 @@ public class FacilityListAdapter extends ArrayAdapter<FacilityDTO> {
                 btnBook.setOnClickListener(v -> {
                     Intent intent = new Intent(mContext, BookingActivity.class);
                     intent.putExtra("facilityDTO", facilityDTO);
+                    intent.putExtra("loggedUserData", ((FacilityListActivity)mContext).loggedUserData);
                     mContext.startActivity(intent);
                 });
             }
 
             if (btnFind != null) {
                 btnFind.setOnClickListener(v -> {
-                    /*Uri location = Uri.parse("geo:0,0?q=" +
-                            facilityDTO.getName() + " " +
-                            facilityDTO.getState() + " " +
-                            facilityDTO.getCountry());
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
-                    mapIntent.setPackage("com.google.android.apps.maps");*/
                     Intent intent = new Intent(mContext, MapsFragment.class);
                     intent.putExtra("facilityDTO", facilityDTO);
                     mContext.startActivity(intent);

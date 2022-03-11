@@ -32,7 +32,7 @@ public class MainMenuActivity extends AppCompatActivity {
         MainMenuActivityBinding binding = MainMenuActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        loggedUserData = getIntent().getParcelableExtra("loginUserData");
+        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
@@ -43,12 +43,8 @@ public class MainMenuActivity extends AppCompatActivity {
         Button btnListBookings = binding.contentScrolling.btnListBookings;
 
         btnListFacilities.setOnClickListener(v -> {
-
-            /*Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode("Polideportivo Lalo García, Valladolid, España"));
-            Intent intent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-            intent.setPackage("com.google.android.apps.maps");*/
-
             Intent intent = new Intent(this, FacilityListActivity.class);
+            intent.putExtra("loggedUserData", loggedUserData);
             startActivity(intent);
         });
 

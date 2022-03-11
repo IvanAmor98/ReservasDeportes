@@ -11,7 +11,7 @@ public class FacilityService {
 
     private final String URL = "/facility";
 
-    public void getFacilityById(Context context, String TAG, String facilityId, ServerCallback serverCallback) {
+    public void getFacilityById(Context context, String TAG, String token, String facilityId, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/getById";
@@ -21,14 +21,14 @@ public class FacilityService {
 
             String requestBody = loginData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getFacilityList(Context context, String TAG, ServerCallback serverCallback) {
+    public void getFacilityList(Context context, String TAG, String token, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/list";
@@ -37,7 +37,7 @@ public class FacilityService {
             loginData.put("sender", TAG);
             String requestBody = loginData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();

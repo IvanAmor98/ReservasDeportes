@@ -14,7 +14,7 @@ public class BookingService {
 
     private final String URL = "/booking";
 
-    public void saveAppointment(Context context, String TAG, BookingDTO bookingDTO, ServerCallback serverCallback) {
+    public void saveAppointment(Context context, String TAG, String token, BookingDTO bookingDTO, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/newBooking";
@@ -37,14 +37,14 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getReservedDates(Context context, String TAG, ServerCallback serverCallback) {
+    public void getReservedDates(Context context, String TAG, String token, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/getDates";
@@ -52,14 +52,14 @@ public class BookingService {
             JSONObject bookingData = new JSONObject();
             String requestBody = bookingData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getReservedTimes(Context context, String TAG, int[] selectedDate, ServerCallback serverCallback) {
+    public void getReservedTimes(Context context, String TAG, String token, int[] selectedDate, ServerCallback serverCallback) {
         try {
             String endpoint = URL + "/getReservedTimes";
 
@@ -77,14 +77,14 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getAllByUser(Context context, String TAG, String userId, ServerCallback serverCallback) {
+    public void getAllByUser(Context context, String TAG, String token, String userId, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/getAllByUser";
@@ -94,14 +94,14 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void deleteById(Context context, String TAG, String bookingId, ServerCallback serverCallback) {
+    public void deleteById(Context context, String TAG, String token, String bookingId, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/deleteById";
@@ -111,14 +111,14 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updatePaidById(Context context, String TAG, String bookingId, ServerCallback serverCallback) {
+    public void updatePaidById(Context context, String TAG, String token, String bookingId, ServerCallback serverCallback) {
 
         try {
             String endpoint = URL + "/updatePaidById";
@@ -129,7 +129,7 @@ public class BookingService {
 
             String requestBody = bookingData.toString();
 
-            HttpService.addPetition(context, TAG, endpoint, requestBody, serverCallback);
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
