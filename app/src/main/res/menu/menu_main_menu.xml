@@ -3,6 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.reservasdeportes.ui.MainMenuActivity">
     <item
+        android:id="@+id/menu_about"
+        android:orderInCategory="100"
+        android:title="@string/menu_about"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_help"
+        android:orderInCategory="100"
+        android:title="@string/menu_help"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/menu_logout"
         android:orderInCategory="100"
         android:title="@string/menu_logout"

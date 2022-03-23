@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -22,6 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ReservasDeportes">
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,12 +33,13 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <service
             android:name=".services.NotificationService"
-            android:enabled="true"
-            android:exported="true" />
-
+            android:enabled="true" />
+        <activity
+            android:name=".ui.AboutActivity"
+            android:exported="false"
+            android:theme="@style/myDialog" />
         <activity
             android:name=".ui.paypal.PaypalActivity"
             android:exported="false" />
@@ -62,8 +63,7 @@
             android:name=".ui.MainMenuActivity"
             android:exported="true"
             android:label="@string/title_activity_main_menu"
-            android:theme="@style/Theme.ReservasDeportes.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.ReservasDeportes.NoActionBar"/>
         <activity
             android:name=".ui.signup.SignupActivity"
             android:exported="false" />
