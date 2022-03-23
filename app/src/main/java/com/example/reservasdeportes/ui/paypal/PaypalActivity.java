@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class PaypalActivity extends AppCompatActivity implements ServerCallback {
+public class PaypalActivity extends AppCompatActivity {
 
     private final String TAG = PaypalActivity.class.toString();
     private final float PRICE_FIVE_MINUTES = 0.5F;
@@ -95,25 +95,23 @@ public class PaypalActivity extends AppCompatActivity implements ServerCallback 
                     createOrderActions.create(order, (CreateOrderActions.OnOrderCreated) null);
                 },
                 approval -> approval.getOrderActions().capture(result -> {
-                    bookingService.updatePaidById(this, TAG, loggedUserData.getToken(), bookingDTO.getId(), this);
+                    bookingService.updatePaidById(this, TAG, loggedUserData.getToken(), bookingDTO.getId(), new ServerCallback() {
+                        @Override
+                        public void onSuccess(JSONObject result) {
+                            Toast.makeText(PaypalActivity.this, "Pago realizado correctamente", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            Toast.makeText(PaypalActivity.this, "ERROR: " + error, Toast.LENGTH_SHORT).show();
+                            bookingService.updatePaidById(PaypalActivity.this, TAG, loggedUserData.getToken(), bookingDTO.getId(), this);
+                        }
+                    });
                 }), null,
                 () -> Log.d("OnCancel", "Buyer cancelled the PayPal experience."),
                 errorInfo -> Log.d("OnError", String.format("Error: %s", errorInfo))
 
         );
-
-
-    }
-
-    @Override
-    public void onSuccess(JSONObject result) {
-        Toast.makeText(PaypalActivity.this, "Pago realizado correctamente", Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    @Override
-    public void onError(String error) {
-        Toast.makeText(PaypalActivity.this, "ERROR: " + error, Toast.LENGTH_SHORT).show();
-        bookingService.updatePaidById(this, TAG, loggedUserData.getToken(), bookingDTO.getId(), this);
     }
 }

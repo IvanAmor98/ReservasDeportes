@@ -24,6 +24,7 @@ import com.example.reservasdeportes.services.BookingService;
 import com.example.reservasdeportes.services.NotificationService;
 import com.example.reservasdeportes.ui.facility.FacilityDTO;
 import com.example.reservasdeportes.ui.login.LoggedUserData;
+import com.example.reservasdeportes.ui.paypal.PaypalActivity;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.Timepoint;
@@ -374,6 +375,20 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         return Integer.parseInt(minString) + 10;
     }
 
+    private void payUserCheck(){
+        new AlertDialog.Builder(BookingActivity.this)
+                .setMessage("Desea realizar el pago de la reserva?")
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+                    Intent intent = new Intent(BookingActivity.this, PaypalActivity.class);
+                    intent.putExtra("bookingDTO", bookingDTO);
+                    intent.putExtra("loggedUserData", loggedUserData);
+                    startActivity(intent);
+                    finish();
+                })
+                .setNegativeButton(android.R.string.no, (dialog, witchButton) -> finish()).show();
+
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void alarmUserCheck() {
         Calendar calendar = Calendar.getInstance();
@@ -398,9 +413,9 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                         Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), "Alarm set on: %d/%d/%d %d:%d",
                                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR),
                                 calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)), Toast.LENGTH_LONG).show();
-                        finish();
+                        payUserCheck();
                     })
-                    .setNegativeButton(android.R.string.no, (dialog, witchButton) -> finish()).show();
+                    .setNegativeButton(android.R.string.no, (dialog, witchButton) -> payUserCheck()).show();
         } else {
             finish();
         }
