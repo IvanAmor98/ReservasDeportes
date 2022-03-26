@@ -21,11 +21,11 @@ public class BookingService {
 
             Calendar calendarTimeFrom = Calendar.getInstance();
             calendarTimeFrom.clear();
-            calendarTimeFrom.set(bookingDTO.getDate()[0], bookingDTO.getDate()[1], bookingDTO.getDate()[2], bookingDTO.getTimeFrom()[0], bookingDTO.getTimeFrom()[1]);
+            calendarTimeFrom.set(bookingDTO.getDate()[0], bookingDTO.getDate()[1], bookingDTO.getDate()[2], bookingDTO.getTimeFrom(), 0);
 
             Calendar calendarTimeTo = (Calendar) calendarTimeFrom.clone();
-            calendarTimeTo.set(Calendar.HOUR_OF_DAY, bookingDTO.getTimeTo()[0]);
-            calendarTimeTo.set(Calendar.MINUTE, bookingDTO.getTimeTo()[1]);
+            calendarTimeTo.set(Calendar.HOUR_OF_DAY, bookingDTO.getTimeTo());
+            calendarTimeTo.set(Calendar.MINUTE, 0);
 
             JSONObject bookingData = new JSONObject();
             bookingData.put("userId", bookingDTO.getUserId());
@@ -69,7 +69,7 @@ public class BookingService {
 
             Calendar to = Calendar.getInstance();
             to.clear();
-            to.set(selectedDate[0], selectedDate[1], selectedDate[2], 21, 0, 0);
+            to.set(selectedDate[0], selectedDate[1], selectedDate[2], 23, 0, 0);
 
             JSONObject bookingData = new JSONObject();
             bookingData.put("from", from.getTimeInMillis());

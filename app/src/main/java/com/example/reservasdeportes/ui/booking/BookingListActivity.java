@@ -58,8 +58,8 @@ public class BookingListActivity extends AppCompatActivity {
                                 object.getString("facility"),
                                 object.getString("facilityName"),
                                 new int[]{from.get(Calendar.YEAR), from.get(Calendar.MONTH), from.get(Calendar.DAY_OF_MONTH)},
-                                new int[]{from.get(Calendar.HOUR_OF_DAY), from.get(Calendar.MINUTE)},
-                                new int[]{to.get(Calendar.HOUR_OF_DAY), to.get(Calendar.MINUTE)},
+                                from.get(Calendar.HOUR_OF_DAY),
+                                to.get(Calendar.HOUR_OF_DAY),
                                 object.getBoolean("paid")
                         ));
                     }

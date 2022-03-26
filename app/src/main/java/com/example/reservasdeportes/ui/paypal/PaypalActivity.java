@@ -48,19 +48,19 @@ public class PaypalActivity extends AppCompatActivity {
         bookingDTO = getIntent().getParcelableExtra("bookingDTO");
         loggedUserData = getIntent().getParcelableExtra("loggedUserData");
 
-        binding.detailStart.setText(String.format(Locale.getDefault(), "%02d:%02d", bookingDTO.getTimeFrom()[0], bookingDTO.getTimeFrom()[1]));
-        binding.detailEnd.setText(String.format(Locale.getDefault(), "%02d:%02d", bookingDTO.getTimeTo()[0], bookingDTO.getTimeTo()[1]));
+        binding.detailStart.setText(String.format(Locale.getDefault(), "%02d:%02d", bookingDTO.getTimeFrom(), 0));
+        binding.detailEnd.setText(String.format(Locale.getDefault(), "%02d:%02d", bookingDTO.getTimeTo(), 0));
 
         Calendar calendarFrom = Calendar.getInstance();
         calendarFrom.clear();
         Calendar calendarTo = Calendar.getInstance();
         calendarTo.clear();
 
-        calendarFrom.set(Calendar.HOUR_OF_DAY, bookingDTO.getTimeFrom()[0]);
-        calendarFrom.set(Calendar.MINUTE, bookingDTO.getTimeFrom()[1]);
+        calendarFrom.set(Calendar.HOUR_OF_DAY, bookingDTO.getTimeFrom());
+        calendarFrom.set(Calendar.MINUTE, 0);
 
-        calendarTo.set(Calendar.HOUR_OF_DAY, bookingDTO.getTimeTo()[0]);
-        calendarTo.set(Calendar.MINUTE, bookingDTO.getTimeTo()[1]);
+        calendarTo.set(Calendar.HOUR_OF_DAY, bookingDTO.getTimeTo());
+        calendarTo.set(Calendar.MINUTE, 0);
 
         int count = 0;
         while (calendarFrom.compareTo(calendarTo) != 0) {

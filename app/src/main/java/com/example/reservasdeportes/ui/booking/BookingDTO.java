@@ -9,13 +9,22 @@ public class BookingDTO implements Parcelable {
     private String facilityId;
     private String facilityName;
     private int[] date;
-    private int[] timeFrom;
-    private int[] timeTo;
+    private int timeFrom;
+    private int timeTo;
     private boolean paid;
 
     public BookingDTO() { _id = null; }
 
-    public BookingDTO(String id, String userId, String facilityId, String facilityName, int[] date, int[] timeFrom, int[] timeTo, boolean paid) {
+    public BookingDTO(
+            String id,
+            String userId,
+            String facilityId,
+            String facilityName,
+            int[] date,
+            int timeFrom,
+            int timeTo,
+            boolean paid
+    ) {
         this._id = id;
         this.userId = userId;
         this.facilityId = facilityId;
@@ -33,8 +42,8 @@ public class BookingDTO implements Parcelable {
         facilityId = in.readString();
         facilityName = in.readString();
         date = in.createIntArray();
-        timeFrom = in.createIntArray();
-        timeTo = in.createIntArray();
+        timeFrom = in.readInt();
+        timeTo = in.readInt();
         paid = in.readInt() == 1;
     }
 
@@ -45,8 +54,8 @@ public class BookingDTO implements Parcelable {
         dest.writeString(facilityId);
         dest.writeString(facilityName);
         dest.writeIntArray(date);
-        dest.writeIntArray(timeFrom);
-        dest.writeIntArray(timeTo);
+        dest.writeInt(timeFrom);
+        dest.writeInt(timeTo);
         dest.writeInt(paid ? 1 : 0);
     }
 
@@ -79,13 +88,13 @@ public class BookingDTO implements Parcelable {
 
     public void setDate(int[] date) { this.date = date; }
 
-    public int[] getTimeFrom() { return timeFrom; }
+    public int getTimeFrom() { return timeFrom; }
 
-    public void setTimeFrom(int[] timeFrom) { this.timeFrom = timeFrom; }
+    public void setTimeFrom(int timeFrom) { this.timeFrom = timeFrom; }
 
-    public int[] getTimeTo() { return timeTo; }
+    public int getTimeTo() { return timeTo; }
 
-    public void setTimeTo(int[] timeTo) { this.timeTo = timeTo; }
+    public void setTimeTo(int timeTo) { this.timeTo = timeTo; }
 
     public boolean isPaid() { return paid; }
 
