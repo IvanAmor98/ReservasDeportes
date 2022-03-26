@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.reservasdeportes.databinding.MainMenuActivityBinding;
@@ -64,16 +65,31 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.menu_logout) {
-            logout();
-            return true;
+        switch(item.getItemId()){
+            case R.id.menu_about:
+                about();
+                return true;
+            case R.id.menu_help:
+                help();
+                return true;
+            case R.id.menu_logout:
+                logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
-    public void logout() {
+    private void about() {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
+
+    private void help() {
+
+    }
+
+    private void logout() {
         SharedPreferences.Editor editor = getSharedPreferences("logData", MODE_PRIVATE).edit();
         editor.clear().apply();
         Toast.makeText(getApplicationContext(), "Bye " + loggedUserData.getDisplayName(), Toast.LENGTH_SHORT).show();
