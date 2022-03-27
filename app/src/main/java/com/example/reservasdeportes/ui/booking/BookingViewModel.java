@@ -23,8 +23,8 @@ public class BookingViewModel {
 
     LiveData<BookingFormState> getBookingFormState() { return bookingFormState; }
 
-    public void bookingDateChanged(String date, ArrayList<ReservedTime> reservedTimes) {
-        Integer checkDate = hasAvailableTimes(reservedTimes) ? null : R.string.no_bookings_available;
+    public void bookingDateChanged(String date, String[] availableTimes) {
+        Integer checkDate = hasAvailableTimes(availableTimes) ? null : R.string.no_bookings_available;
 
         if (checkDate != null) {
             bookingFormState.setValue(new BookingFormState(checkDate, null, null));
@@ -43,14 +43,8 @@ public class BookingViewModel {
             bookingFormState.setValue(new BookingFormState(true, true, true));
     }
 
-    private boolean hasAvailableTimes(ArrayList<ReservedTime> reservedTimes) {
-        int count = timesLength;
-        for (ReservedTime reservedTime: reservedTimes) {
-            for (int i = reservedTime.getTimeFrom(); i < reservedTime.getTimeTo(); i++) {
-                count--;
-            }
-        }
-        return count > 0;
+    private boolean hasAvailableTimes(String[] availableTimes) {
+        return availableTimes.length > 1;
     }
 
 }

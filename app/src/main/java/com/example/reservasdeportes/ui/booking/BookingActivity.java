@@ -58,6 +58,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
     private boolean isToday;
     private ReservedTime selectedTime;
     private final ArrayList<ReservedTime> reservedTimes = new ArrayList<>();
+    private String[] availableFromTimes;
     private ArrayAdapter<String> fromAdapter;
     private ArrayAdapter<String> toAdapter;
 
@@ -199,7 +200,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void afterTextChanged(Editable s) {
                 bookingViewModel.bookingDateChanged(
-                        tvDatePicker.getText().toString(), reservedTimes
+                        tvDatePicker.getText().toString(), availableFromTimes
                 );
             }
         };
@@ -216,10 +217,9 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         selectedDate = new int[]{year, monthOfYear, dayOfMonth};
         Calendar checkToday = Calendar.getInstance();
-        if (checkToday.get(Calendar.YEAR) == selectedDate[0] &&
+        isToday = checkToday.get(Calendar.YEAR) == selectedDate[0] &&
                 checkToday.get(Calendar.MONTH) == selectedDate[1] &&
-                checkToday.get(Calendar.DAY_OF_MONTH) == selectedDate[2])
-            isToday = true;
+                checkToday.get(Calendar.DAY_OF_MONTH) == selectedDate[2];
         spinnerFrom.setEnabled(false);
         spinnerTo.setEnabled(false);
         bookingService.getReservedTimes(this, TAG, loggedUserData.getToken(), selectedDate, new ServerCallback() {
@@ -238,6 +238,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                         reservedTime.setTimeTo(calendar.get(Calendar.HOUR_OF_DAY));
                         reservedTimes.add(reservedTime);
                     }
+                    availableFromTimes = getAvailableFromTimes();
                     tvDatePicker.setText(String.format(Locale.getDefault(), "%d/%d/%d", dayOfMonth, monthOfYear + 1, year));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -262,7 +263,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
     }
 
     private void setAvailableFromHours() {
-        fromAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, getAvailableFromTimes());
+        fromAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, availableFromTimes);
         spinnerFrom.setAdapter(fromAdapter);
     }
 
@@ -272,19 +273,22 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
     }
 
     private String[] getAvailableFromTimes() {
-        ArrayList<String> availableTimes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.hours)));
+        ArrayList<String> tempAvailableTimes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.hours)));
         for (ReservedTime reservedTime: reservedTimes) {
             for (int i = reservedTime.getTimeFrom(); i < reservedTime.getTimeTo(); i++) {
-                availableTimes.remove(String.valueOf(i));
+                tempAvailableTimes.remove(String.valueOf(i));
             }
         }
+        ArrayList<String> availableTimes = new ArrayList<>();
         if (isToday) {
             int now = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-            for (String time : availableTimes) {
-                if (Integer.parseInt(time) <= now) availableTimes.remove(time);
+            for (String time : tempAvailableTimes) {
+                if (time.equals("") || Integer.parseInt(time) > now) availableTimes.add(time);
             }
+            return availableTimes.toArray(new String[0]);
+        } else  {
+            return tempAvailableTimes.toArray(new String[0]);
         }
-        return availableTimes.toArray(new String[0]);
     }
 
     private String[] getAvailableToTimes() {
