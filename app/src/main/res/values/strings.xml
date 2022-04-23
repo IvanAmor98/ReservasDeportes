@@ -52,10 +52,14 @@
     <string name="menu_gallery" translatable="false">Gallery</string>
     <string name="menu_slideshow" translatable="false">Slideshow</string>
     <string name="error_no_hours_available">No hours available, try another day</string>
+    <string name="notification_title">Booking</string>
+    <string name="notification_text">Your booking starts in 30 minutes</string>
 
 
     <string name="no_bookings_available">The selected date has no bookings available</string>
 
     <string name="about_text" translatable="false">Autor: Ivan Amor Pajares</string>
     <string name="alert_pay">Do you wish to pay your booking now?</string>
+    <string name="button_action_open">Open</string>
+    <string name="select_installation_label">Select instalation type</string>
 </resources>

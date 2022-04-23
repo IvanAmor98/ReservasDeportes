@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.PaypalActivityBinding;
+import com.example.reservasdeportes.model.LoggedUserDTO;
 import com.example.reservasdeportes.services.BookingService;
-import com.example.reservasdeportes.ui.booking.BookingDTO;
-import com.example.reservasdeportes.ui.login.LoggedUserData;
+import com.example.reservasdeportes.model.BookingDTO;
 import com.paypal.checkout.createorder.CreateOrderActions;
 import com.paypal.checkout.createorder.CurrencyCode;
 import com.paypal.checkout.createorder.OrderIntent;
@@ -35,7 +35,7 @@ public class PaypalActivity extends AppCompatActivity {
     private final float PRICE_FIVE_MINUTES = 0.5F;
     private BookingDTO bookingDTO;
     private BookingService bookingService;
-    private LoggedUserData loggedUserData;
+    private LoggedUserDTO loggedUserDTO;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -46,7 +46,7 @@ public class PaypalActivity extends AppCompatActivity {
 
         bookingService = new BookingService();
         bookingDTO = getIntent().getParcelableExtra("bookingDTO");
-        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
+        loggedUserDTO = getIntent().getParcelableExtra("loggedUserDTO");
 
         binding.detailStart.setText(String.format(Locale.getDefault(), "%02d:%02d", bookingDTO.getTimeFrom(), 0));
         binding.detailEnd.setText(String.format(Locale.getDefault(), "%02d:%02d", bookingDTO.getTimeTo(), 0));
@@ -95,7 +95,7 @@ public class PaypalActivity extends AppCompatActivity {
                     createOrderActions.create(order, (CreateOrderActions.OnOrderCreated) null);
                 },
                 approval -> approval.getOrderActions().capture(result -> {
-                    bookingService.updatePaidById(this, TAG, loggedUserData.getToken(), bookingDTO.getId(), new ServerCallback() {
+                    bookingService.updatePaidById(this, TAG, loggedUserDTO.getToken(), bookingDTO.getId(), new ServerCallback() {
                         @Override
                         public void onSuccess(JSONObject result) {
                             Toast.makeText(PaypalActivity.this, "Pago realizado correctamente", Toast.LENGTH_SHORT).show();
@@ -105,7 +105,7 @@ public class PaypalActivity extends AppCompatActivity {
                         @Override
                         public void onError(String error) {
                             Toast.makeText(PaypalActivity.this, "ERROR: " + error, Toast.LENGTH_SHORT).show();
-                            bookingService.updatePaidById(PaypalActivity.this, TAG, loggedUserData.getToken(), bookingDTO.getId(), this);
+                            bookingService.updatePaidById(PaypalActivity.this, TAG, loggedUserDTO.getToken(), bookingDTO.getId(), this);
                         }
                     });
                 }), null,

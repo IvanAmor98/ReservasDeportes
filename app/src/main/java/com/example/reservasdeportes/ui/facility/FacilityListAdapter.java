@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.reservasdeportes.model.FacilityDTO;
 import com.example.reservasdeportes.ui.MapsFragment;
 import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.ui.booking.BookingActivity;
@@ -52,7 +53,7 @@ public class FacilityListAdapter extends ArrayAdapter<FacilityDTO> {
                 btnBook.setOnClickListener(v -> {
                     Intent intent = new Intent(mContext, BookingActivity.class);
                     intent.putExtra("facilityDTO", facilityDTO);
-                    intent.putExtra("loggedUserData", ((FacilityListActivity)mContext).loggedUserData);
+                    intent.putExtra("loggedUserDTO", ((FacilityListActivity)mContext).loggedUserDTO);
                     mContext.startActivity(intent);
                 });
             }

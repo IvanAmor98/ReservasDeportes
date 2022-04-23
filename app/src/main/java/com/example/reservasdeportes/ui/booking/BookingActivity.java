@@ -24,10 +24,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.BookingActivityBinding;
+import com.example.reservasdeportes.model.BookingDTO;
+import com.example.reservasdeportes.model.FacilityTypes;
 import com.example.reservasdeportes.services.BookingService;
 import com.example.reservasdeportes.services.NotificationService;
-import com.example.reservasdeportes.ui.facility.FacilityDTO;
-import com.example.reservasdeportes.ui.login.LoggedUserData;
+import com.example.reservasdeportes.model.FacilityDTO;
+import com.example.reservasdeportes.model.LoggedUserDTO;
 import com.example.reservasdeportes.ui.paypal.PaypalActivity;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -39,24 +41,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class BookingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private final String TAG = BookingActivity.class.toString();
     private BookingViewModel bookingViewModel;
-    private LoggedUserData loggedUserData;
+    private LoggedUserDTO loggedUserDTO;
     private final BookingService bookingService = new BookingService();
     private TextView tvDatePicker;
+    private Spinner spinnerType;
     private Spinner spinnerFrom;
     private Spinner spinnerTo;
     private BookingDTO bookingDTO;
     private int[] selectedDate;
     private boolean isToday;
     private ReservedTime selectedTime;
+    private FacilityTypes selectedType;
     private final ArrayList<ReservedTime> reservedTimes = new ArrayList<>();
     private String[] availableFromTimes;
     private ArrayAdapter<String> fromAdapter;
@@ -70,13 +72,14 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         com.example.reservasdeportes.databinding.BookingActivityBinding binding = BookingActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
+        loggedUserDTO = getIntent().getParcelableExtra("loggedUserDTO");
 
         bookingViewModel = new BookingViewModel(getResources().getStringArray(R.array.hours).length);
 
         FacilityDTO facilityDTO = getIntent().getParcelableExtra("facilityDTO");
         TextView tvTitle = binding.bookingTitle;
         tvDatePicker = binding.datePicker;
+        spinnerType = binding.spinnerType;
         spinnerFrom = binding.spinnerFrom;
         spinnerTo = binding.spinnerTo;
         Button btnSave = binding.saveButton;
@@ -92,13 +95,61 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
 
         tvDatePicker.setOnClickListener(v -> showDatePicker());
 
+        ArrayAdapter<FacilityTypes> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FacilityTypes.values());
+        spinnerType.setAdapter(adapter);
+        spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (selectedDate == null) return;
+
+                selectedType = adapter.getItem(position);
+                bookingService.getReservedTimes(BookingActivity.this, TAG, loggedUserDTO.getToken(), selectedDate, selectedType, new ServerCallback() {
+                    @Override
+                    public void onSuccess(JSONObject result) {
+                        try {
+                            reservedTimes.clear();
+                            JSONArray jsonArray = result.getJSONArray("times");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONArray object = jsonArray.getJSONArray(i);
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.clear();
+                                calendar.setTimeInMillis(object.getLong(0));
+                                ReservedTime reservedTime = new ReservedTime(calendar.get(Calendar.HOUR_OF_DAY));
+                                calendar.setTimeInMillis(object.getLong(1));
+                                reservedTime.setTimeTo(calendar.get(Calendar.HOUR_OF_DAY));
+                                reservedTimes.add(reservedTime);
+                            }
+                            availableFromTimes = getAvailableFromTimes();
+                            setAvailableFromHours();
+                            bookingViewModel.typeChanged(selectedType, availableFromTimes);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(BookingActivity.this, error, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) return;
+
                 spinnerFrom.setSelection(position);
                 if (!fromAdapter.getItem(position).equals(""))
                     selectedTime = new ReservedTime(Integer.parseInt(fromAdapter.getItem(position)));
                 bookingViewModel.timeFromChanged(fromAdapter.getItem(position));
+                setAvailableToHours();
             }
 
             @Override
@@ -110,6 +161,8 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) return;
+
                 spinnerTo.setSelection(position, true);
                 if (!toAdapter.getItem(position).equals(""))
                     selectedTime.setTimeTo(Integer.parseInt(toAdapter.getItem(position)));
@@ -130,12 +183,13 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
             bookingDTO.setUserId(getUser());
             bookingDTO.setFacilityId(facilityDTO.getId());
             bookingDTO.setFacilityName(facilityDTO.getName());
+            bookingDTO.setType(selectedType);
             bookingDTO.setDate(selectedDate);
             bookingDTO.setTimeFrom(selectedTime.getTimeFrom());
             bookingDTO.setTimeTo(selectedTime.getTimeTo());
             bookingDTO.setPaid(false);
 
-            bookingService.saveAppointment(this, TAG, loggedUserData.getToken(), bookingDTO, new ServerCallback() {
+            bookingService.saveAppointment(this, TAG, loggedUserDTO.getToken(), bookingDTO, new ServerCallback() {
                 @Override
                 public void onSuccess(JSONObject result) {
                     try {
@@ -165,21 +219,28 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
             if (bookingFormState == null) {
                 return;
             }
+
             if (!bookingFormState.isDateValid()) {
                 if (bookingFormState.getDateError() != null)
                     tvDatePicker.setError(getString(bookingFormState.getDateError()));
-                spinnerFrom.setEnabled(false);
+                spinnerType.setEnabled(false);
             } else {
                 tvDatePicker.setError(null);
+                if (!spinnerType.isEnabled()) {
+                    spinnerType.setEnabled(true);
+                }
+            }
+
+            if (!bookingFormState.isTypeValid()) {
+                spinnerFrom.setEnabled(false);
+            } else {
                 if (!spinnerFrom.isEnabled()) {
-                    setAvailableFromHours();
                     spinnerFrom.setEnabled(true);
                 }
             }
 
             if (bookingFormState.isTimeFromValid()) {
                 if (!spinnerTo.isEnabled()) {
-                    setAvailableToHours();
                     spinnerTo.setEnabled(true);
                 }
             } else {
@@ -200,7 +261,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void afterTextChanged(Editable s) {
                 bookingViewModel.bookingDateChanged(
-                        tvDatePicker.getText().toString(), availableFromTimes
+                        tvDatePicker.getText().toString()
                 );
             }
         };
@@ -220,35 +281,10 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         isToday = checkToday.get(Calendar.YEAR) == selectedDate[0] &&
                 checkToday.get(Calendar.MONTH) == selectedDate[1] &&
                 checkToday.get(Calendar.DAY_OF_MONTH) == selectedDate[2];
+        spinnerType.setEnabled(false);
         spinnerFrom.setEnabled(false);
         spinnerTo.setEnabled(false);
-        bookingService.getReservedTimes(this, TAG, loggedUserData.getToken(), selectedDate, new ServerCallback() {
-            @Override
-            public void onSuccess(JSONObject result) {
-                try {
-                    reservedTimes.clear();
-                    JSONArray jsonArray = result.getJSONArray("times");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONArray object = jsonArray.getJSONArray(i);
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.clear();
-                        calendar.setTimeInMillis(object.getLong(0));
-                        ReservedTime reservedTime = new ReservedTime(calendar.get(Calendar.HOUR_OF_DAY));
-                        calendar.setTimeInMillis(object.getLong(1));
-                        reservedTime.setTimeTo(calendar.get(Calendar.HOUR_OF_DAY));
-                        reservedTimes.add(reservedTime);
-                    }
-                    availableFromTimes = getAvailableFromTimes();
-                    tvDatePicker.setText(String.format(Locale.getDefault(), "%d/%d/%d", dayOfMonth, monthOfYear + 1, year));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onError(String error) {
-                Toast.makeText(BookingActivity.this, error, Toast.LENGTH_LONG).show();
-            }
-        });
+        tvDatePicker.setText(String.format(Locale.getDefault(), "%d/%d/%d", dayOfMonth, monthOfYear + 1, year));
     }
 
     private void showDatePicker() {
@@ -279,8 +315,8 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                 tempAvailableTimes.remove(String.valueOf(i));
             }
         }
-        ArrayList<String> availableTimes = new ArrayList<>();
         if (isToday) {
+            ArrayList<String> availableTimes = new ArrayList<>();
             int now = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             for (String time : tempAvailableTimes) {
                 if (time.equals("") || Integer.parseInt(time) > now) availableTimes.add(time);
@@ -311,7 +347,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                     Intent intent = new Intent(BookingActivity.this, PaypalActivity.class);
                     intent.putExtra("bookingDTO", bookingDTO);
-                    intent.putExtra("loggedUserData", loggedUserData);
+                    intent.putExtra("loggedUserDTO", loggedUserDTO);
                     startActivity(intent);
                     finish();
                 })

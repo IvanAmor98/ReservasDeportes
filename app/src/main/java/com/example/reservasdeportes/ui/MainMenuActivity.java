@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.ui.booking.BookingListActivity;
 import com.example.reservasdeportes.ui.facility.FacilityListActivity;
-import com.example.reservasdeportes.ui.login.LoggedUserData;
+import com.example.reservasdeportes.model.LoggedUserDTO;
 import com.example.reservasdeportes.ui.login.LoginActivity;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -17,14 +17,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.reservasdeportes.databinding.MainMenuActivityBinding;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    private LoggedUserData loggedUserData;
+    private LoggedUserDTO loggedUserDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,25 +32,25 @@ public class MainMenuActivity extends AppCompatActivity {
         MainMenuActivityBinding binding = MainMenuActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
+        loggedUserDTO = getIntent().getParcelableExtra("loggedUserDTO");
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = binding.toolbarLayout;
-        toolBarLayout.setTitle(loggedUserData.getDisplayName());
+        toolBarLayout.setTitle(loggedUserDTO.getDisplayName());
 
         Button btnListFacilities = binding.contentScrolling.btnListFacilities;
         Button btnListBookings = binding.contentScrolling.btnListBookings;
 
         btnListFacilities.setOnClickListener(v -> {
             Intent intent = new Intent(this, FacilityListActivity.class);
-            intent.putExtra("loggedUserData", loggedUserData);
+            intent.putExtra("loggedUserDTO", loggedUserDTO);
             startActivity(intent);
         });
 
         btnListBookings.setOnClickListener(v -> {
             Intent intent = new Intent(this, BookingListActivity.class);
-            intent.putExtra("loggedUserData", loggedUserData);
+            intent.putExtra("loggedUserDTO", loggedUserDTO);
             startActivity(intent);
         });
 
@@ -92,7 +91,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private void logout() {
         SharedPreferences.Editor editor = getSharedPreferences("logData", MODE_PRIVATE).edit();
         editor.clear().apply();
-        Toast.makeText(getApplicationContext(), "Bye " + loggedUserData.getDisplayName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Bye " + loggedUserDTO.getDisplayName(), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

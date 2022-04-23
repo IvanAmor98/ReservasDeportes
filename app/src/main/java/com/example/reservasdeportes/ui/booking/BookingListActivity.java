@@ -9,8 +9,10 @@ import android.widget.Toast;
 import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.BookingListActivityBinding;
+import com.example.reservasdeportes.model.BookingDTO;
+import com.example.reservasdeportes.model.FacilityTypes;
 import com.example.reservasdeportes.services.BookingService;
-import com.example.reservasdeportes.ui.login.LoggedUserData;
+import com.example.reservasdeportes.model.LoggedUserDTO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +28,7 @@ public class BookingListActivity extends AppCompatActivity {
 
     private final ArrayList<BookingDTO> bookings = new ArrayList<>();
     private BookingListAdapter adapter;
-    LoggedUserData loggedUserData;
+    LoggedUserDTO loggedUserDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +37,13 @@ public class BookingListActivity extends AppCompatActivity {
         BookingListActivityBinding binding = BookingListActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        loggedUserData = getIntent().getParcelableExtra("loggedUserData");
+        loggedUserDTO = getIntent().getParcelableExtra("loggedUserDTO");
 
         adapter = new BookingListAdapter(this, R.layout.booking_list_row, bookings);
         ListView lvBookings = binding.bookingList;
         lvBookings.setAdapter(adapter);
 
-        bookingService.getAllByUser(this, TAG, loggedUserData.getToken(), loggedUserData.getId(), new ServerCallback() {
+        bookingService.getAllByUser(this, TAG, loggedUserDTO.getToken(), loggedUserDTO.getId(), new ServerCallback() {
             @Override
             public void onSuccess(JSONObject result) {
                 try {
@@ -57,6 +59,7 @@ public class BookingListActivity extends AppCompatActivity {
                                 object.getString("user"),
                                 object.getString("facility"),
                                 object.getString("facilityName"),
+                                FacilityTypes.values()[object.getInt("type")],
                                 new int[]{from.get(Calendar.YEAR), from.get(Calendar.MONTH), from.get(Calendar.DAY_OF_MONTH)},
                                 from.get(Calendar.HOUR_OF_DAY),
                                 to.get(Calendar.HOUR_OF_DAY),

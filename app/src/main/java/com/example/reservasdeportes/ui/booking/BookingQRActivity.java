@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.reservasdeportes.databinding.BookingQrActivityBinding;
+import com.example.reservasdeportes.model.BookingDTO;
 import com.google.zxing.WriterException;
 
 import androidmads.library.qrgenearator.QRGContents;

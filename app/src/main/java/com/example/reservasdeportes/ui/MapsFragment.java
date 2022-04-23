@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.databinding.FragmentMapsBinding;
-import com.example.reservasdeportes.ui.facility.FacilityDTO;
+import com.example.reservasdeportes.model.FacilityDTO;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -58,10 +58,11 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
         FragmentMapsBinding binding = FragmentMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //Recupera la clase de datos del intent
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         facilityDTO = getIntent().getParcelableExtra("facilityDTO");
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        //Obtiene el mapFragment y notifica cuando esta listo para ser usado
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
@@ -81,7 +82,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        //Crea un marcador en la posicion de la instalacion
         latLng = new LatLng(facilityDTO.getLatitude(), facilityDTO.getLongitude());
         mMap.addMarker(new MarkerOptions().position(latLng).title(facilityDTO.getName()));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
@@ -90,10 +91,13 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
         checkPermissions();
     }
 
+    //Si es posible abre el GUI de localizacion
+    @SuppressLint("MissingPermission")
     private void updateLocationUI() {
         if (mMap == null) {
             return;
         }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[] {
                     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -113,6 +117,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
+    //Si es posible obtiene la ubicacion del dispositivo
     private void checkPermissions() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -128,8 +133,10 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //Obtiene la ultima ubicacion cocnocida del dispositivo
     private void getDeviceLocation() {
-        @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+        @SuppressLint("MissingPermission")
+        Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
         locationResult.addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 lastKnownLocation = task.getResult();
@@ -149,6 +156,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    //Dibuja la posicion actual
     private void drawPosition() {
         me = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(-lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()))
@@ -157,13 +165,14 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
                 .fillColor(Color.RED));
     }
 
+    //Dibuja la ruta
     private void drawRoute() {
         List<LatLng> path = new ArrayList<>();
         path.add(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
         path.add(me.getCenter());
 
         GeoApiContext context = new GeoApiContext.Builder()
-                .apiKey("AIzaSyAGlglZewCPEl0PQIw7uOXY7OyW-ZugU_Y")
+                .apiKey(getString(R.string.google_maps_key))
                 .build();
         DirectionsApiRequest req = DirectionsApi.getDirections(context,
                 "" + lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude(),

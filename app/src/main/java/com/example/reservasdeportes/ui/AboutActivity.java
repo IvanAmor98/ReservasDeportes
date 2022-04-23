@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.example.reservasdeportes.R;
 
+//Clase de informacion de la aplicacion
 public class AboutActivity extends AppCompatActivity {
 
     @Override

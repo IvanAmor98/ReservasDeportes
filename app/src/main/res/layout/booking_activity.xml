@@ -26,6 +26,16 @@
         app:layout_constraintTop_toBottomOf="@+id/bookingTitle" />
 
     <TextView
+        android:id="@+id/typePickerLablel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/select_installation_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datePickerLabel" />
+
+    <TextView
         android:id="@+id/timePickerFromLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +43,7 @@
         android:layout_marginTop="50dp"
         android:text="@string/booking_pick_time_from"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePickerLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/typePickerLablel" />
 
     <TextView
         android:id="@+id/timePickerToLabel"
@@ -67,6 +77,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/timePickerFromLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/timePickerFromLabel" />
+
+    <Spinner
+        android:id="@+id/spinnerType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:gravity="center_horizontal|center_vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/typePickerLablel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/typePickerLablel" />
 
     <Spinner
         android:id="@+id/spinnerTo"

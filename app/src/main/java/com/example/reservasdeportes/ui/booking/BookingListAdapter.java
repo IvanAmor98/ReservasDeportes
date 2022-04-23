@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.controller.ServerCallback;
+import com.example.reservasdeportes.model.BookingDTO;
 import com.example.reservasdeportes.services.BookingService;
 import com.example.reservasdeportes.ui.paypal.PaypalActivity;
 
@@ -82,7 +83,7 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
                     btnPay.setOnClickListener(v -> {
                         Intent intent = new Intent(mContext, PaypalActivity.class);
                         intent.putExtra("bookingDTO", bookingDTO);
-                        intent.putExtra("loggedUserData", ((BookingListActivity)mContext).loggedUserData);
+                        intent.putExtra("loggedUserDTO", ((BookingListActivity)mContext).loggedUserDTO);
                         mContext.startActivity(intent);
                     });
                 }
@@ -103,7 +104,7 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
                             .setMessage(R.string.alert_delete)
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setPositiveButton(android.R.string.yes, (dialog, whichButton) ->
-                                new BookingService().deleteById(mContext, TAG, ((BookingListActivity)mContext).loggedUserData.getToken(), bookingDTO.getId(), new ServerCallback() {
+                                new BookingService().deleteById(mContext, TAG, ((BookingListActivity)mContext).loggedUserDTO.getToken(), bookingDTO.getId(), new ServerCallback() {
                                     @Override
                                     public void onSuccess(JSONObject result) {
                                         Toast.makeText(mContext, R.string.booking_delete_success, Toast.LENGTH_LONG).show();

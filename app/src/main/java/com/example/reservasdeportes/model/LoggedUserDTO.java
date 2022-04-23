@@ -1,31 +1,32 @@
-package com.example.reservasdeportes.ui.login;
+package com.example.reservasdeportes.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Class exposing authenticated user details to the UI.
- */
-public class LoggedUserData implements Parcelable {
+//Clase de almacenamiento de datos de usuario
+public class LoggedUserDTO implements Parcelable {
     private final String _id;
     private final String displayName;
     private final String email;
     private final String token;
 
-    LoggedUserData(String _id, String email, String displayName, String token) {
+    //Constructor
+    public LoggedUserDTO(String _id, String email, String displayName, String token) {
         this._id = _id;
         this.email = email;
         this.displayName = displayName;
         this.token = token;
     }
 
-    protected LoggedUserData(Parcel in) {
+    //Constructor de la interfaz parcelable (para poder deserializarlo)
+    protected LoggedUserDTO(Parcel in) {
         _id = in.readString();
         displayName = in.readString();
         email = in.readString();
         token = in.readString();
     }
 
+    //Getters
     public String getId() { return _id; }
 
     public String getEmail() { return email; }
@@ -34,17 +35,20 @@ public class LoggedUserData implements Parcelable {
 
     public String getToken() { return token; }
 
-    public static final Creator<LoggedUserData> CREATOR = new Creator<LoggedUserData>() {
+    //Metodo de la interfaz parcelable
+    public static final Creator<LoggedUserDTO> CREATOR = new Creator<LoggedUserDTO>() {
         @Override
-        public LoggedUserData createFromParcel(Parcel in) { return new LoggedUserData(in); }
+        public LoggedUserDTO createFromParcel(Parcel in) { return new LoggedUserDTO(in); }
 
         @Override
-        public LoggedUserData[] newArray(int size) { return new LoggedUserData[size]; }
+        public LoggedUserDTO[] newArray(int size) { return new LoggedUserDTO[size]; }
     };
 
+    //Metodo de la interfaz parcelable
     @Override
     public int describeContents() { return 0; }
 
+    //Serializador de la interfaz parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(_id);

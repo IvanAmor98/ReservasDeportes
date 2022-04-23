@@ -47,4 +47,8 @@
     <string name="alert_delete">Esta seguro de que desea borrar la reserva?</string>
     <string name="error_no_hours_available" translatable="false">Hoy ya no es posible reservar, pruebe otro dia</string>
     <string name="alert_pay">Desea realizar ahora el pago de la reserva?</string>
+    <string name="notification_title">Reserva</string>
+    <string name="notification_text">Su reserva empieza en 30 minutos</string>
+    <string name="button_action_open">Abrir</string>
+    <string name="select_installation_label" translatable="false">Seleccione tipo de instalacion</string>
 </resources>

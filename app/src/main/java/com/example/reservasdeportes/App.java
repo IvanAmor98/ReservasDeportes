@@ -11,12 +11,14 @@ import com.paypal.checkout.config.Environment;
 import com.paypal.checkout.createorder.CurrencyCode;
 import com.paypal.checkout.createorder.UserAction;
 
+//Clase que configura la aplicacion
 public class App extends Application {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate() {
         super.onCreate();
 
+        //Crea la configuracion para el correcto funcionamiento del api de paypal
         CheckoutConfig config = new CheckoutConfig(
                 this,
                 "Ac6oij-apUQJNymvU99naxJNkxlzqBrM5QCMrAFxGvJ5_Bn8ZZMvey4V7xHMWAPdjSTthekb1AAGEJz0",

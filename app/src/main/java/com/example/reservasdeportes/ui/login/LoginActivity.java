@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.LoginActivityBinding;
+import com.example.reservasdeportes.model.LoggedUserDTO;
 import com.example.reservasdeportes.services.UserService;
 import com.example.reservasdeportes.ui.MainMenuActivity;
 import com.example.reservasdeportes.ui.signup.SignupActivity;
@@ -63,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(JSONObject result) {
                         try {
-                            LoggedUserData userData = new LoggedUserData(
+                            LoggedUserDTO userData = new LoggedUserDTO(
                                     result.getJSONObject("successData").getString("_id"),
                                     result.getJSONObject("successData").getString("email"),
                                     result.getJSONObject("successData").getString("username"),
@@ -123,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                         .setFilterByAuthorizedAccounts(false)
                         .build())
                 // Automatically sign in when exactly one credential is retrieved.
-                .setAutoSelectEnabled(false)
+                .setAutoSelectEnabled(true)
                 .build();
 
         checkPermissions();
@@ -230,11 +231,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void startMainActivity(LoggedUserData loggedUserData) {
+    private void startMainActivity(LoggedUserDTO loggedUserDTO) {
         //loginViewModel.cancelRequest(this, TAG);
 
         Intent intent = new Intent(this, MainMenuActivity.class);
-        intent.putExtra("loggedUserData", loggedUserData);
+        intent.putExtra("loggedUserDTO", loggedUserDTO);
         startActivity(intent);
         finish();
     }
@@ -245,20 +246,20 @@ public class LoginActivity extends AppCompatActivity {
         long timeOfLastLogin = sharedPreferences.getLong("lastLogin", 0);
         long currentTime = System.currentTimeMillis();
 
-        if(currentTime - timeOfLastLogin < 5*60*1000) startMainActivity(new LoggedUserData(
+        if(currentTime - timeOfLastLogin < 5*60*1000) startMainActivity(new LoggedUserDTO(
                 sharedPreferences.getString("_id", ""),
                 sharedPreferences.getString("email", ""),
                 sharedPreferences.getString("user", ""),
                 sharedPreferences.getString("token", "")));
     }
 
-    private void saveLoginData(LoggedUserData loggedUserData) {
+    private void saveLoginData(LoggedUserDTO loggedUserDTO) {
         SharedPreferences.Editor editor = getSharedPreferences("logData", MODE_PRIVATE).edit();
 
-        editor.putString("_id", loggedUserData.getId());
-        editor.putString("email", loggedUserData.getEmail());
-        editor.putString("user", loggedUserData.getDisplayName());
-        editor.putString("token", loggedUserData.getToken());
+        editor.putString("_id", loggedUserDTO.getId());
+        editor.putString("email", loggedUserDTO.getEmail());
+        editor.putString("user", loggedUserDTO.getDisplayName());
+        editor.putString("token", loggedUserDTO.getToken());
         editor.putLong("lastLogin", System.currentTimeMillis());
 
         editor.apply();
@@ -271,7 +272,8 @@ public class LoginActivity extends AppCompatActivity {
                 requestPermissions(new String[] {
                         Manifest.permission.INTERNET,
                         Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.SCHEDULE_EXACT_ALARM
                 }, 1);
             }
         }

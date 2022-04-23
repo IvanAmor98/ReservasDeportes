@@ -9,7 +9,7 @@ import android.util.Log;
 import android.util.Patterns;
 
 import com.example.reservasdeportes.controller.HttpService;
-import com.example.reservasdeportes.services.FacilityService;
+import com.example.reservasdeportes.model.LoggedUserDTO;
 import com.example.reservasdeportes.services.UserService;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.R;
@@ -37,7 +37,7 @@ public class LoginViewModel extends ViewModel {
             public void onSuccess(JSONObject result) {
                 try {
                     if (result.getBoolean("success")) {
-                        loginResult.setValue(new LoginResult(new LoggedUserData(
+                        loginResult.setValue(new LoginResult(new LoggedUserDTO(
                                 result.getJSONObject("successData").getString("_id"),
                                 result.getJSONObject("successData").getString("email"),
                                 result.getJSONObject("successData").getString("username"),

@@ -1,25 +1,30 @@
-package com.example.reservasdeportes.ui.booking;
+package com.example.reservasdeportes.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+//Clase de almacenamiento de datos de reservas
 public class BookingDTO implements Parcelable {
     private final String _id;
     private String userId;
     private String facilityId;
     private String facilityName;
+    private FacilityTypes type;
     private int[] date;
     private int timeFrom;
     private int timeTo;
     private boolean paid;
 
+    //Constructor por defecto
     public BookingDTO() { _id = null; }
 
+    //Constructor
     public BookingDTO(
             String id,
             String userId,
             String facilityId,
             String facilityName,
+            FacilityTypes type,
             int[] date,
             int timeFrom,
             int timeTo,
@@ -29,39 +34,45 @@ public class BookingDTO implements Parcelable {
         this.userId = userId;
         this.facilityId = facilityId;
         this.facilityName = facilityName;
+        this.type = type;
         this.date = date;
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
         this.paid = paid;
     }
 
-
+    //Constructor de la interfaz parcelable (para poder deserializarlo)
     protected BookingDTO(Parcel in) {
         _id = in.readString();
         userId = in.readString();
         facilityId = in.readString();
         facilityName = in.readString();
+        type = FacilityTypes.values()[in.readInt()];
         date = in.createIntArray();
         timeFrom = in.readInt();
         timeTo = in.readInt();
         paid = in.readInt() == 1;
     }
 
+    //Serializador de la interfaz parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(_id);
         dest.writeString(userId);
         dest.writeString(facilityId);
         dest.writeString(facilityName);
+        dest.writeInt(type.getValue());
         dest.writeIntArray(date);
         dest.writeInt(timeFrom);
         dest.writeInt(timeTo);
         dest.writeInt(paid ? 1 : 0);
     }
 
+    //Metodo de la interfaz parcelable
     @Override
     public int describeContents() { return 0; }
 
+    //Metodo de la interfaz parcelable
     public static final Creator<BookingDTO> CREATOR = new Creator<BookingDTO>() {
         @Override
         public BookingDTO createFromParcel(Parcel in) { return new BookingDTO(in); }
@@ -70,6 +81,8 @@ public class BookingDTO implements Parcelable {
         public BookingDTO[] newArray(int size) { return new BookingDTO[size]; }
     };
 
+
+    //Getters/Setters
     public String getId() { return _id; }
 
     public String getUserId() { return userId; }
@@ -83,6 +96,10 @@ public class BookingDTO implements Parcelable {
     public String getFacilityName() { return facilityName; }
 
     public void setFacilityName(String facilityName) { this.facilityName = facilityName; }
+
+    public FacilityTypes getType() { return type; }
+
+    public void setType(FacilityTypes type) { this.type = type; }
 
     public int[] getDate() { return date; }
 
