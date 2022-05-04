@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+//Activity que permite crear una nueva reserva
 public class BookingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private final String TAG = BookingActivity.class.toString();

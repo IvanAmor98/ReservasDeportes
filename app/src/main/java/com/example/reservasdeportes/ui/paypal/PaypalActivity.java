@@ -3,6 +3,7 @@ package com.example.reservasdeportes.ui.paypal;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -99,6 +100,7 @@ public class PaypalActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(JSONObject result) {
                             Toast.makeText(PaypalActivity.this, "Pago realizado correctamente", Toast.LENGTH_SHORT).show();
+                            setResult(RESULT_OK);
                             finish();
                         }
 

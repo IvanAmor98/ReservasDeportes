@@ -1,6 +1,7 @@
 package com.example.reservasdeportes.ui.booking;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +13,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.model.BookingDTO;
 import com.example.reservasdeportes.services.BookingService;
 import com.example.reservasdeportes.ui.paypal.PaypalActivity;
+
 
 import org.json.JSONObject;
 
@@ -29,12 +36,21 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
     private final int resourceLayout;
     private final Context mContext;
     private final List<BookingDTO> items;
+    private BookingDTO paying;
+
+    private final ActivityResultLauncher<Intent> startForResult;
 
     public BookingListAdapter(Context context, int resource, List<BookingDTO> items) {
         super(context, resource, items);
         this.resourceLayout = resource;
         this.mContext = context;
         this.items = items;
+
+        this.startForResult = ((AppCompatActivity)mContext).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK)
+            paying.setPaid(true);
+            notifyDataSetChanged();
+        });
     }
 
     @Override
@@ -81,10 +97,12 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
                     btnPay.setVisibility(View.GONE);
                 } else {
                     btnPay.setOnClickListener(v -> {
+
                         Intent intent = new Intent(mContext, PaypalActivity.class);
                         intent.putExtra("bookingDTO", bookingDTO);
                         intent.putExtra("loggedUserDTO", ((BookingListActivity)mContext).loggedUserDTO);
-                        mContext.startActivity(intent);
+                        paying = bookingDTO;
+                        this.startForResult.launch(intent);
                     });
                 }
             }

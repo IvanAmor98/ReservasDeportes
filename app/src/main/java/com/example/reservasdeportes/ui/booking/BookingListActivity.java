@@ -28,7 +28,7 @@ public class BookingListActivity extends AppCompatActivity {
 
     private final ArrayList<BookingDTO> bookings = new ArrayList<>();
     private BookingListAdapter adapter;
-    LoggedUserDTO loggedUserDTO;
+    protected LoggedUserDTO loggedUserDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,11 @@ public class BookingListActivity extends AppCompatActivity {
         ListView lvBookings = binding.bookingList;
         lvBookings.setAdapter(adapter);
 
+        updateItems();
+    }
+
+    private void updateItems() {
+        bookings.clear();
         bookingService.getAllByUser(this, TAG, loggedUserDTO.getToken(), loggedUserDTO.getId(), new ServerCallback() {
             @Override
             public void onSuccess(JSONObject result) {
@@ -76,6 +81,7 @@ public class BookingListActivity extends AppCompatActivity {
             public void onError(String error) {
                 Toast.makeText(BookingListActivity.this, "ERROR: " + error, Toast.LENGTH_LONG).show();
             }
+
         });
     }
 }
