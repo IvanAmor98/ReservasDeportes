@@ -10,10 +10,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +54,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
     private LoggedUserDTO loggedUserDTO;
     private final BookingService bookingService = new BookingService();
     private TextView tvDatePicker;
-    private Spinner spinnerType;
+    private ListView listType;
     private Spinner spinnerFrom;
     private Spinner spinnerTo;
     private BookingDTO bookingDTO;
@@ -80,7 +82,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         FacilityDTO facilityDTO = getIntent().getParcelableExtra("facilityDTO");
         TextView tvTitle = binding.bookingTitle;
         tvDatePicker = binding.datePicker;
-        spinnerType = binding.spinnerType;
+        listType = binding.lvType;
         spinnerFrom = binding.spinnerFrom;
         spinnerTo = binding.spinnerTo;
         Button btnSave = binding.saveButton;
@@ -96,11 +98,11 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
 
         tvDatePicker.setOnClickListener(v -> showDatePicker());
 
-        ArrayAdapter<FacilityTypes> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FacilityTypes.values());
-        spinnerType.setAdapter(adapter);
-        spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ArrayAdapter<FacilityTypes> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, facilityDTO.getFacilityTypes());
+        listType.setAdapter(adapter);
+        listType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (selectedDate == null) return;
 
                 selectedType = adapter.getItem(position);
@@ -132,11 +134,6 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                         Toast.makeText(BookingActivity.this, error, Toast.LENGTH_LONG).show();
                     }
                 });
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
@@ -221,14 +218,24 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                 return;
             }
 
-            if (!bookingFormState.isDateValid()) {
+            if (bookingFormState.hasErrors()) {
                 if (bookingFormState.getDateError() != null)
-                    tvDatePicker.setError(getString(bookingFormState.getDateError()));
-                spinnerType.setEnabled(false);
+                    Toast.makeText(this, bookingFormState.getDateError(), Toast.LENGTH_LONG).show();
+                if (bookingFormState.getTypeError() != null)
+                    Toast.makeText(this, bookingFormState.getTypeError(), Toast.LENGTH_LONG).show();
+                if (bookingFormState.getTimeFromError() != null)
+                    Toast.makeText(this, bookingFormState.getTimeFromError(), Toast.LENGTH_LONG).show();
+                if (bookingFormState.getTimeToError() != null)
+                    Toast.makeText(this, bookingFormState.getTimeToError(), Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (!bookingFormState.isDateValid()) {
+                listType.setEnabled(false);
             } else {
                 tvDatePicker.setError(null);
-                if (!spinnerType.isEnabled()) {
-                    spinnerType.setEnabled(true);
+                if (!listType.isEnabled()) {
+                    listType.setEnabled(true);
                 }
             }
 
@@ -282,7 +289,8 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         isToday = checkToday.get(Calendar.YEAR) == selectedDate[0] &&
                 checkToday.get(Calendar.MONTH) == selectedDate[1] &&
                 checkToday.get(Calendar.DAY_OF_MONTH) == selectedDate[2];
-        spinnerType.setEnabled(false);
+        listType.clearChoices();
+        listType.setEnabled(false);
         spinnerFrom.setEnabled(false);
         spinnerTo.setEnabled(false);
         tvDatePicker.setText(String.format(Locale.getDefault(), "%d/%d/%d", dayOfMonth, monthOfYear + 1, year));

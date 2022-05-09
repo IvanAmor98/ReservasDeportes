@@ -64,4 +64,6 @@ public class BookingFormState {
     public boolean isTimeToValid() {
         return isTimeToValid;
     }
+
+    public boolean hasErrors() { return dateError != null || typeError != null || timeFromError != null || timeToError != null; }
 }

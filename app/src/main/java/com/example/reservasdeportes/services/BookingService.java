@@ -94,6 +94,7 @@ public class BookingService {
             //Crea un objeto JSON con los datos de la peticion
             JSONObject bookingData = new JSONObject();
             bookingData.put("userId", userId);
+            bookingData.put("date", System.currentTimeMillis() - (10 * 60 * 1000)); //La hora actual menos diez minutos
 
             //Pasa el JSON a string para que pueda ser enviado
             String requestBody = bookingData.toString();
