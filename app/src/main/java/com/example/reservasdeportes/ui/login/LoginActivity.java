@@ -27,6 +27,7 @@ import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.LoginActivityBinding;
 import com.example.reservasdeportes.model.LoggedUserDTO;
 import com.example.reservasdeportes.services.UserService;
+import com.example.reservasdeportes.ui.AdminMenuActivity;
 import com.example.reservasdeportes.ui.MainMenuActivity;
 import com.example.reservasdeportes.ui.signup.SignupActivity;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
@@ -68,7 +69,8 @@ public class LoginActivity extends AppCompatActivity {
                                     result.getJSONObject("successData").getString("_id"),
                                     result.getJSONObject("successData").getString("email"),
                                     result.getJSONObject("successData").getString("username"),
-                                    result.getJSONObject("successData").getString("token"));
+                                    result.getJSONObject("successData").getString("token"),
+                                    false);
                             saveLoginData(userData);
                             startMainActivity(userData);
                         } catch (Exception e) {
@@ -156,6 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                     // No saved credentials found. Launch the One Tap sign-up flow, or
                     // do nothing and continue presenting the signed-out UI.
                     Toast.makeText(this, "Hubo un error", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "onCreate: " + e.getMessage(), null);
                 }));
 
         loginViewModel.getLoginFormState().observe(this, loginFormState -> {
@@ -232,9 +235,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startMainActivity(LoggedUserDTO loggedUserDTO) {
-        //loginViewModel.cancelRequest(this, TAG);
-
-        Intent intent = new Intent(this, MainMenuActivity.class);
+        Intent intent;
+        if (loggedUserDTO.isAdmin()) {
+            intent = new Intent(this, AdminMenuActivity.class);
+        } else  {
+            intent = new Intent(this, MainMenuActivity.class);
+        }
         intent.putExtra("loggedUserDTO", loggedUserDTO);
         startActivity(intent);
         finish();
@@ -250,7 +256,9 @@ public class LoginActivity extends AppCompatActivity {
                 sharedPreferences.getString("_id", ""),
                 sharedPreferences.getString("email", ""),
                 sharedPreferences.getString("user", ""),
-                sharedPreferences.getString("token", "")));
+                sharedPreferences.getString("token", ""),
+                sharedPreferences.getBoolean("admin", false)
+                ));
     }
 
     private void saveLoginData(LoggedUserDTO loggedUserDTO) {
@@ -260,6 +268,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("email", loggedUserDTO.getEmail());
         editor.putString("user", loggedUserDTO.getDisplayName());
         editor.putString("token", loggedUserDTO.getToken());
+        editor.putBoolean("admin", loggedUserDTO.isAdmin());
         editor.putLong("lastLogin", System.currentTimeMillis());
 
         editor.apply();

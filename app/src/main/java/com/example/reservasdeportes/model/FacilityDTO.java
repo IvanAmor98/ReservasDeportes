@@ -30,7 +30,7 @@ public class FacilityDTO implements Parcelable {
         name = in.readString();
         country = in.readString();
         state = in.readString();
-        int[] tempTypes = new int[2];
+        int[] tempTypes = new int[in.readInt()];
         in.readIntArray(tempTypes);
         facilityTypes = intArrayToTypes(tempTypes);
         latitude = in.readFloat();
@@ -112,6 +112,7 @@ public class FacilityDTO implements Parcelable {
         dest.writeString(name);
         dest.writeString(country);
         dest.writeString(state);
+        dest.writeInt(facilityTypes.length);
         dest.writeIntArray(typesToIntArray(facilityTypes));
         dest.writeFloat(latitude);
         dest.writeFloat(longitude);

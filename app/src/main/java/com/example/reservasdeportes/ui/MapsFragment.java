@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.databinding.FragmentMapsBinding;
@@ -218,6 +219,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         } catch(Exception ex) {
+            Toast.makeText(this, "Cant find route", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
         }
 

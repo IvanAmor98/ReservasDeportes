@@ -41,7 +41,8 @@ public class LoginViewModel extends ViewModel {
                                 result.getJSONObject("successData").getString("_id"),
                                 result.getJSONObject("successData").getString("email"),
                                 result.getJSONObject("successData").getString("username"),
-                                result.getJSONObject("successData").getString("token")
+                                result.getJSONObject("successData").getString("token"),
+                                result.getJSONObject("successData").getBoolean("admin")
                         )));
                     } else {
                         Log.e("LoginResponse", result.getString("errorData"));

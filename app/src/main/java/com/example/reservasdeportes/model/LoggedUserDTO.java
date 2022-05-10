@@ -1,5 +1,6 @@
 package com.example.reservasdeportes.model;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,13 +10,15 @@ public class LoggedUserDTO implements Parcelable {
     private final String displayName;
     private final String email;
     private final String token;
+    private final boolean admin;
 
     //Constructor
-    public LoggedUserDTO(String _id, String email, String displayName, String token) {
+    public LoggedUserDTO(String _id, String email, String displayName, String token, boolean admin) {
         this._id = _id;
         this.email = email;
         this.displayName = displayName;
         this.token = token;
+        this.admin = admin;
     }
 
     //Constructor de la interfaz parcelable (para poder deserializarlo)
@@ -24,6 +27,7 @@ public class LoggedUserDTO implements Parcelable {
         displayName = in.readString();
         email = in.readString();
         token = in.readString();
+        admin = in.readInt() == 1;
     }
 
     //Getters
@@ -34,6 +38,8 @@ public class LoggedUserDTO implements Parcelable {
     public String getDisplayName() { return displayName; }
 
     public String getToken() { return token; }
+
+    public boolean isAdmin() { return admin; }
 
     //Metodo de la interfaz parcelable
     public static final Creator<LoggedUserDTO> CREATOR = new Creator<LoggedUserDTO>() {
@@ -55,5 +61,6 @@ public class LoggedUserDTO implements Parcelable {
         dest.writeString(displayName);
         dest.writeString(email);
         dest.writeString(token);
+        dest.writeInt(admin ? 1 : 0);
     }
 }
