@@ -150,4 +150,24 @@ public class BookingService {
         }
     }
 
+    //Marca una reserva con el id dado como empezada
+    public void updateCheckedById(Context context, String TAG, String token, String bookingId, ServerCallback serverCallback) {
+        try {
+            //Asigna la ruta del endpoint
+            String endpoint = URL + "/updateCheckedById";
+
+            //Crea un objeto JSON con los datos de la peticion
+            JSONObject bookingData = new JSONObject();
+            bookingData.put("_id", bookingId);
+
+            //Pasa el JSON a string para que pueda ser enviado
+            String requestBody = bookingData.toString();
+
+            //Añade la peticion mediante el gestor de peticiones
+            HttpService.addPetition(context, TAG, token, endpoint, requestBody, serverCallback);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
