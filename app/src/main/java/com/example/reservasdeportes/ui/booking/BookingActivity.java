@@ -99,42 +99,39 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
 
         ArrayAdapter<FacilityTypes> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, facilityDTO.getFacilityTypes());
         listType.setAdapter(adapter);
-        listType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (selectedDate == null) return;
+        listType.setOnItemClickListener((parent, view, position, id) -> {
+            if (selectedDate == null) return;
 
-                selectedType = adapter.getItem(position);
-                bookingService.getReservedTimes(BookingActivity.this, TAG, loggedUserDTO.getToken(), selectedDate, selectedType, new ServerCallback() {
-                    @Override
-                    public void onSuccess(JSONObject result) {
-                        try {
-                            reservedTimes.clear();
-                            JSONArray jsonArray = result.getJSONArray("times");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONArray object = jsonArray.getJSONArray(i);
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.clear();
-                                calendar.setTimeInMillis(object.getLong(0));
-                                ReservedTime reservedTime = new ReservedTime(calendar.get(Calendar.HOUR_OF_DAY));
-                                calendar.setTimeInMillis(object.getLong(1));
-                                reservedTime.setTimeTo(calendar.get(Calendar.HOUR_OF_DAY));
-                                reservedTimes.add(reservedTime);
-                            }
-                            availableFromTimes = getAvailableFromTimes();
-                            setAvailableFromHours();
-                            bookingViewModel.typeChanged(selectedType, availableFromTimes);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            selectedType = adapter.getItem(position);
+            bookingService.getReservedTimes(BookingActivity.this, TAG, loggedUserDTO.getToken(), selectedDate, selectedType, new ServerCallback() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    try {
+                        reservedTimes.clear();
+                        JSONArray jsonArray = result.getJSONArray("times");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONArray object = jsonArray.getJSONArray(i);
+                            Calendar calendar1 = Calendar.getInstance();
+                            calendar1.clear();
+                            calendar1.setTimeInMillis(object.getLong(0));
+                            ReservedTime reservedTime = new ReservedTime(calendar1.get(Calendar.HOUR_OF_DAY));
+                            calendar1.setTimeInMillis(object.getLong(1));
+                            reservedTime.setTimeTo(calendar1.get(Calendar.HOUR_OF_DAY));
+                            reservedTimes.add(reservedTime);
                         }
+                        availableFromTimes = getAvailableFromTimes();
+                        setAvailableFromHours();
+                        bookingViewModel.typeChanged(selectedType, availableFromTimes);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    @Override
-                    public void onError(String error) {
-                        Toast.makeText(BookingActivity.this, error, Toast.LENGTH_LONG).show();
-                    }
-                });
+                }
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(BookingActivity.this, error, Toast.LENGTH_LONG).show();
+                }
+            });
 
-            }
         });
 
         spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

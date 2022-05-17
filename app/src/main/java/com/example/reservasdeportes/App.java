@@ -21,7 +21,7 @@ public class App extends Application {
         //Crea la configuracion para el correcto funcionamiento del api de paypal
         CheckoutConfig config = new CheckoutConfig(
                 this,
-                "Ac6oij-apUQJNymvU99naxJNkxlzqBrM5QCMrAFxGvJ5_Bn8ZZMvey4V7xHMWAPdjSTthekb1AAGEJz0",
+                getString(R.string.paypal_api_key),
                 Environment.SANDBOX,
                 String.format("%s://paypalpay", BuildConfig.APPLICATION_ID),
                 CurrencyCode.EUR,
