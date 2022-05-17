@@ -150,14 +150,14 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         loginResultHandler.launch(new IntentSenderRequest.Builder(result.getPendingIntent().getIntentSender()).build());
                     } catch(android.content.ActivityNotFoundException e){
-                        e.printStackTrace();
+                        Toast.makeText(this, "No se ha encontrado cuenta de google, por favor añada una cuenta de google en el dispositivo y vuelva a intentarlo", Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Error: " + e.getLocalizedMessage());
                     }
                 })
                 .addOnFailureListener(this, e -> {
                     // No saved credentials found. Launch the One Tap sign-up flow, or
                     // do nothing and continue presenting the signed-out UI.
-                    Toast.makeText(this, "Hubo un error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No se ha encontrado cuenta de google, por favor añada una cuenta de google en el dispositivo y vuelva a intentarlo", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "onCreate: " + e.getMessage(), null);
                 }));
 

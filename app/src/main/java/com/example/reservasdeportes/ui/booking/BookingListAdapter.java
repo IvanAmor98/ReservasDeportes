@@ -95,7 +95,12 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
             if (btnPay != null) {
                 if (bookingDTO.isPaid()) {
                     btnPay.setVisibility(View.GONE);
+                    btnDelete.setVisibility(View.GONE);
+                    btnQR.setVisibility(View.VISIBLE);
                 } else {
+                    btnPay.setVisibility(View.VISIBLE);
+                    btnDelete.setVisibility(View.VISIBLE);
+                    btnQR.setVisibility(View.GONE);
                     btnPay.setOnClickListener(v -> {
 
                         Intent intent = new Intent(mContext, PaypalActivity.class);

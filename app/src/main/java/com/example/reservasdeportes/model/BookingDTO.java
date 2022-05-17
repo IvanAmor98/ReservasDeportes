@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 //Clase de almacenamiento de datos de reservas
 public class BookingDTO implements Parcelable {
-    private final String _id;
+    private String _id;
     private String userId;
     private String facilityId;
     private String facilityName;
@@ -84,6 +84,8 @@ public class BookingDTO implements Parcelable {
 
     //Getters/Setters
     public String getId() { return _id; }
+
+    public void setId(String id) { this._id = id; }
 
     public String getUserId() { return userId; }
 

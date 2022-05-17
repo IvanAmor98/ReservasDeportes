@@ -24,6 +24,7 @@ import com.paypal.checkout.order.AppContext;
 import com.paypal.checkout.order.Order;
 import com.paypal.checkout.order.PurchaseUnit;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -99,9 +100,16 @@ public class PaypalActivity extends AppCompatActivity {
                     bookingService.updatePaidById(this, TAG, loggedUserDTO.getToken(), bookingDTO.getId(), new ServerCallback() {
                         @Override
                         public void onSuccess(JSONObject result) {
-                            Toast.makeText(PaypalActivity.this, "Pago realizado correctamente", Toast.LENGTH_SHORT).show();
-                            setResult(RESULT_OK);
-                            finish();
+                            try {
+                                if (result.getBoolean("updated")) {
+                                    Toast.makeText(PaypalActivity.this, "Pago realizado correctamente", Toast.LENGTH_LONG).show();
+                                    setResult(RESULT_OK);
+                                    finish();
+                                }
+                            } catch (JSONException e) {
+                                Toast.makeText(PaypalActivity.this, "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
