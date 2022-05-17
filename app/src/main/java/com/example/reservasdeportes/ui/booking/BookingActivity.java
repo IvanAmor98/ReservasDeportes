@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -193,11 +192,13 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                     try {
                         if (result.getBoolean("success")) {
                             Toast.makeText(BookingActivity.this, R.string.booking_save_success, Toast.LENGTH_LONG).show();
+                            bookingDTO.setId(result.getString("_id"));
                             alarmUserCheck();
                         } else {
                             Toast.makeText(BookingActivity.this, result.getString("errorData"), Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException e) {
+                        Toast.makeText(BookingActivity.this, "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 }
