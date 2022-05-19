@@ -51,4 +51,12 @@
     <string name="notification_text">Su reserva empieza en 30 minutos</string>
     <string name="button_action_open">Abrir</string>
     <string name="select_installation_label" translatable="false">Seleccione tipo de instalacion</string>
+    <string name="payment_success">Pago realizado correctamente</string>
+    <string name="alarm_set">Alarma configurada el</string>
+    <string name="cant_find_route">No se puede encontrar una ruta</string>
+    <string name="no_account_found">No se ha encontrado cuenta de google, por favor añada una cuenta de google en el dispositivo y vuelva a intentarlo</string>
+    <string name="default_error">Hubo un error</string>
+    <string name="from">Desde</string>
+    <string name="to">Hasta</string>
+    <string name="booking_started">Reserva comenzada</string>
 </resources>

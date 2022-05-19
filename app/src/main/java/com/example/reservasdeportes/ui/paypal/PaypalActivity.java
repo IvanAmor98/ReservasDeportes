@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.PaypalActivityBinding;
 import com.example.reservasdeportes.model.LoggedUserDTO;
@@ -102,7 +103,7 @@ public class PaypalActivity extends AppCompatActivity {
                         public void onSuccess(JSONObject result) {
                             try {
                                 if (result.getBoolean("updated")) {
-                                    Toast.makeText(PaypalActivity.this, "Pago realizado correctamente", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PaypalActivity.this, getString(R.string.payment_success), Toast.LENGTH_LONG).show();
                                     setResult(RESULT_OK);
                                     finish();
                                 }
@@ -120,8 +121,7 @@ public class PaypalActivity extends AppCompatActivity {
                     });
                 }), null,
                 () -> Log.d("OnCancel", "Buyer cancelled the PayPal experience."),
-                errorInfo -> Log.d("OnError", String.format("Error: %s", errorInfo))
-
+                errorInfo -> Toast.makeText(PaypalActivity.this, "ERROR: " + errorInfo, Toast.LENGTH_SHORT).show()
         );
     }
 }

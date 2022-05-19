@@ -84,11 +84,11 @@ public class BookingListAdapter extends ArrayAdapter<BookingDTO> {
                     bookingDTO.getDate()[0]));
             }
 
-            if (timeFrom != null) { timeFrom.setText(String.format(Locale.getDefault(), "From: %02d:%02d",
+            if (timeFrom != null) { timeFrom.setText(String.format(Locale.getDefault(), getContext().getString(R.string.from) +": %02d:%02d",
                     bookingDTO.getTimeFrom(),
                     0)); }
 
-            if (timeTo != null) { timeTo.setText(String.format(Locale.getDefault(), "To: %02d:%02d",
+            if (timeTo != null) { timeTo.setText(String.format(Locale.getDefault(), getContext().getString(R.string.to) + ": %02d:%02d",
                     bookingDTO.getTimeTo(),
                     0)); }
 

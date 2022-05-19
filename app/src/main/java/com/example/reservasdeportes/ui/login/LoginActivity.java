@@ -75,14 +75,14 @@ public class LoginActivity extends AppCompatActivity {
                             saveLoginData(userData);
                             startMainActivity(userData);
                         } catch (Exception e) {
-                            Toast.makeText(LoginActivity.this, "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, getString(R.string.default_error), Toast.LENGTH_SHORT).show();
                             Log.e(TAG, e.getMessage());
                         }
                     }
 
                     @Override
                     public void onError(String error) {
-                        Toast.makeText(LoginActivity.this, "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, getString(R.string.default_error), Toast.LENGTH_SHORT).show();
                         Log.e(TAG, error);
                     }
                 });
@@ -151,14 +151,14 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         loginResultHandler.launch(new IntentSenderRequest.Builder(result.getPendingIntent().getIntentSender()).build());
                     } catch(android.content.ActivityNotFoundException e){
-                        Toast.makeText(this, "No se ha encontrado cuenta de google, por favor añada una cuenta de google en el dispositivo y vuelva a intentarlo", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, getString(R.string.no_account_found), Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Error: " + e.getLocalizedMessage());
                     }
                 })
                 .addOnFailureListener(this, e -> {
                     // No saved credentials found. Launch the One Tap sign-up flow, or
                     // do nothing and continue presenting the signed-out UI.
-                    Toast.makeText(this, "No se ha encontrado cuenta de google, por favor añada una cuenta de google en el dispositivo y vuelva a intentarlo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.no_account_found), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "onCreate: " + e.getMessage(), null);
                 }));
 

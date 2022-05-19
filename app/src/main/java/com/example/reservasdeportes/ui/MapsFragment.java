@@ -219,7 +219,7 @@ public class MapsFragment extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         } catch(Exception ex) {
-            Toast.makeText(this, "Cant find route", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.cant_find_route), Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
         }
 

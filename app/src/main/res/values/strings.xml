@@ -57,9 +57,17 @@
 
 
     <string name="no_bookings_available">The selected date has no bookings available</string>
+    <string name="payment_success">Payment completed successfully</string>
 
     <string name="about_text" translatable="false">Autor: Ivan Amor Pajares</string>
     <string name="alert_pay">Do you wish to pay your booking now?</string>
     <string name="button_action_open">Open</string>
     <string name="select_installation_label">Select instalation type</string>
+    <string name="alarm_set">Alarm set on</string>
+    <string name="cant_find_route">Can not find route</string>
+    <string name="no_account_found">No google account found, please add an account to your device and try again</string>
+    <string name="default_error">There was an error</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="booking_started">Booking started</string>
 </resources>

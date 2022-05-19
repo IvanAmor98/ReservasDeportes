@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.reservasdeportes.R;
 import com.example.reservasdeportes.controller.QrCodeScannerActivity;
 import com.example.reservasdeportes.controller.ServerCallback;
 import com.example.reservasdeportes.databinding.AdminMenuActivityBinding;
@@ -37,19 +38,19 @@ public class AdminMenuActivity extends AppCompatActivity {
                 public void onSuccess(JSONObject result) {
                     try {
                         if (result.getBoolean("updated")) {
-                            Toast.makeText(AdminMenuActivity.this, "Reserva comenzada", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminMenuActivity.this, getString(R.string.booking_started), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(AdminMenuActivity.this, "Hubo un error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminMenuActivity.this, getString(R.string.default_error), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(AdminMenuActivity.this, "Hubo un error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AdminMenuActivity.this, getString(R.string.default_error), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
 
                 @Override
                 public void onError(String error) {
-                    Toast.makeText(AdminMenuActivity.this, "Hubo un error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminMenuActivity.this, getString(R.string.default_error), Toast.LENGTH_SHORT).show();
                 }
             });
         }

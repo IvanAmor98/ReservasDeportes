@@ -382,7 +382,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                         setAlarm(calendar);
-                        Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), "Alarm set on: %d/%d/%d %d:%d",
+                        Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), getString(R.string.alarm_set) + ": %d/%d/%d %d:%d",
                                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR),
                                 calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)), Toast.LENGTH_LONG).show();
                         payUserCheck();
