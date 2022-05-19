@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="http_url" templateMergeStrategy="preserve" translatable="false">http://ec2-18-168-204-141.eu-west-2.compute.amazonaws.com/api</string>
     <string name="google_web_client_key" templateMergeStrategy="preserve" translatable="false">398083326352-mcce8uhaf9golv4h6avm65uneijtljt7.apps.googleusercontent.com</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAGlglZewCPEl0PQIw7uOXY7OyW-ZugU_Y</string>
     <string name="paypal_api_key" templateMergeStrategy="preserve" translatable="false">Ac6oij-apUQJNymvU99naxJNkxlzqBrM5QCMrAFxGvJ5_Bn8ZZMvey4V7xHMWAPdjSTthekb1AAGEJz0</string>
 </resources>
+

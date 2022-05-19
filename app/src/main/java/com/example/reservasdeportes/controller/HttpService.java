@@ -9,6 +9,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.reservasdeportes.R;
 
 import org.json.JSONException;
 
@@ -18,17 +19,10 @@ import java.util.Map;
 
 public class HttpService {
 
-    //Direccion del servidor
-    //private static final String URL = "http://ec2-18-168-204-141.eu-west-2.compute.amazonaws.com/api";
-    //Server Juan
-    //private static final String URL = "http://ec2-18-170-117-140.eu-west-2.compute.amazonaws.com/api";
-    private static final String URL = "http://10.0.2.2:8080/api";
-    //private static final String URL = "http://ivansote.ddns.net:8080/api";
-
     //Añade una peticion a la cola con los parametros dados
     public static void addPetition(Context context, String TAG, @Nullable String token, String endpoint, String requestBody, ServerCallback serverCallback) {
         //Crea la peticion con metodo post
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL + endpoint, null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, context.getString(R.string.http_url) + endpoint, null,
                 //Asigna el callback que se ejecutara al recibir una respuesta
                 response -> {
                     try {
