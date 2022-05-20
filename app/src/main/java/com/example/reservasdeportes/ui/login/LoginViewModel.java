@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import android.content.Context;
 import android.util.Log;
 import android.util.Patterns;
+import android.widget.Toast;
 
 import com.example.reservasdeportes.controller.HttpService;
 import com.example.reservasdeportes.model.LoggedUserDTO;
@@ -46,18 +47,18 @@ public class LoginViewModel extends ViewModel {
                         )));
                     } else {
                         Log.e("LoginResponse", result.getString("errorData"));
-                        loginResult.setValue(new LoginResult(R.string.login_failed));
+                        loginResult.setValue(new LoginResult(R.string.user_not_found));
                     }
                 } catch (Exception e) {
                     Log.e("LoginResponse", e.getMessage());
-                    loginResult.setValue(new LoginResult(R.string.login_failed));
+                    loginResult.setValue(new LoginResult(R.string.default_error));
                 }
             }
 
             @Override
             public void onError(String error) {
                 Log.e("LoginResponse", error);
-                loginResult.setValue(new LoginResult(R.string.login_failed));
+                loginResult.setValue(new LoginResult(R.string.default_error));
             }
         });
     }

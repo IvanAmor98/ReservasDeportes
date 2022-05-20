@@ -59,4 +59,5 @@
     <string name="from">Desde</string>
     <string name="to">Hasta</string>
     <string name="booking_started">Reserva comenzada</string>
+    <string name="user_not_found">No se ha encontrado un usuario</string>
 </resources>

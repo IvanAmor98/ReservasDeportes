@@ -34,13 +34,11 @@ public class BookingViewModel {
     }
 
     public void timeFromChanged(String selectedItem) {
-        if (!selectedItem.equals(""))
-            bookingFormState.setValue(new BookingFormState(true, true, true, false));
+        bookingFormState.setValue(new BookingFormState(true, true, !selectedItem.equals(""), false));
     }
 
     public void timeToChanged(String selectedItem) {
-        if (!selectedItem.equals(""))
-            bookingFormState.setValue(new BookingFormState(true, true, true, true));
+        bookingFormState.setValue(new BookingFormState(true, true, true, !selectedItem.equals("")));
     }
 
     private boolean hasAvailableTimes(String[] availableTimes) {

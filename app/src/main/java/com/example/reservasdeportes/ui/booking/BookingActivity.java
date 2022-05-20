@@ -32,6 +32,7 @@ import com.example.reservasdeportes.services.NotificationService;
 import com.example.reservasdeportes.model.FacilityDTO;
 import com.example.reservasdeportes.model.LoggedUserDTO;
 import com.example.reservasdeportes.ui.paypal.PaypalActivity;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.json.JSONArray;
@@ -137,13 +138,12 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) return;
-
                 spinnerFrom.setSelection(position);
-                if (!fromAdapter.getItem(position).equals(""))
+                if (!fromAdapter.getItem(position).equals("")) {
                     selectedTime = new ReservedTime(Integer.parseInt(fromAdapter.getItem(position)));
+                    setAvailableToHours();
+                }
                 bookingViewModel.timeFromChanged(fromAdapter.getItem(position));
-                setAvailableToHours();
             }
 
             @Override
@@ -155,8 +155,6 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) return;
-
                 spinnerTo.setSelection(position, true);
                 if (!toAdapter.getItem(position).equals(""))
                     selectedTime.setTimeTo(Integer.parseInt(toAdapter.getItem(position)));
@@ -230,10 +228,12 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
 
             if (!bookingFormState.isDateValid()) {
                 listType.setEnabled(false);
+                listType.setAlpha((float) 0.3);
             } else {
                 tvDatePicker.setError(null);
                 if (!listType.isEnabled()) {
                     listType.setEnabled(true);
+                    listType.setAlpha((float) 1);
                 }
             }
 
@@ -311,7 +311,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
     }
 
     private void setAvailableToHours() {
-        toAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, getAvailableToTimes());
+        toAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, ArrayUtils.concat(new String[]{""}, getAvailableToTimes()));
         spinnerTo.setAdapter(toAdapter);
     }
 
