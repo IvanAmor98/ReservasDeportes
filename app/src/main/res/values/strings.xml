@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ReservasDeportes</string>
+    <string name="app_name" translatable="false">UpToday</string>
     <string name="loginLabel">Login</string>
     <string name="signupLabel">Signup</string>
     <string name="signupButtonLabel"><u>Create account</u></string>
