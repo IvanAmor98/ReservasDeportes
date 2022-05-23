@@ -1,11 +1,13 @@
 package com.example.reservasdeportes.ui.booking;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -372,7 +374,6 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         calendar.set(Calendar.HOUR_OF_DAY, selectedTime.getTimeFrom());
         calendar.set(Calendar.MINUTE, 0);
         calendar.add(Calendar.MINUTE, -30);
-        calendar.setTimeInMillis(System.currentTimeMillis() + (1000 * 60));
         Calendar now = Calendar.getInstance();
 
         if (calendar.compareTo(now) >= 0) {
@@ -399,7 +400,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
-        Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), getString(R.string.alarm_set) + ": %d/%d/%d %d:%d",
+        Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), getString(R.string.alarm_set) + ": %d/%d/%d %02d:%02d",
                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)), Toast.LENGTH_LONG).show();
     }
