@@ -104,7 +104,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
             if (selectedDate == null) return;
 
             selectedType = adapter.getItem(position);
-            bookingService.getReservedTimes(BookingActivity.this, TAG, loggedUserDTO.getToken(), selectedDate, selectedType, new ServerCallback() {
+            bookingService.getReservedTimes(BookingActivity.this, TAG, loggedUserDTO.getToken(), selectedDate, facilityDTO.getId(), selectedType, new ServerCallback() {
                 @Override
                 public void onSuccess(JSONObject result) {
                     try {
@@ -372,7 +372,7 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         calendar.set(Calendar.HOUR_OF_DAY, selectedTime.getTimeFrom());
         calendar.set(Calendar.MINUTE, 0);
         calendar.add(Calendar.MINUTE, -30);
-
+        calendar.setTimeInMillis(System.currentTimeMillis() + (1000 * 60));
         Calendar now = Calendar.getInstance();
 
         if (calendar.compareTo(now) >= 0) {
@@ -382,9 +382,6 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                         setAlarm(calendar);
-                        Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), getString(R.string.alarm_set) + ": %d/%d/%d %d:%d",
-                                calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR),
-                                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)), Toast.LENGTH_LONG).show();
                         payUserCheck();
                     })
                     .setNegativeButton(android.R.string.no, (dialog, witchButton) -> payUserCheck()).show();
@@ -398,8 +395,12 @@ public class BookingActivity extends AppCompatActivity implements DatePickerDial
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(this, NotificationService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, (int) System.currentTimeMillis(), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), (int) System.currentTimeMillis(), intent, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+        Toast.makeText(BookingActivity.this, String.format(Locale.getDefault(), getString(R.string.alarm_set) + ": %d/%d/%d %d:%d",
+                calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)), Toast.LENGTH_LONG).show();
     }
 }

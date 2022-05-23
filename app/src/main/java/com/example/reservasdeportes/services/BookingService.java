@@ -54,7 +54,7 @@ public class BookingService {
     }
 
     //Obtiene todas las reservas del dia dado
-    public void getReservedTimes(Context context, String TAG, String token, int[] selectedDate, FacilityTypes selectedType, ServerCallback serverCallback) {
+    public void getReservedTimes(Context context, String TAG, String token, int[] selectedDate, String _id, FacilityTypes selectedType, ServerCallback serverCallback) {
         try {
             //Asigna la ruta del endpoint
             String endpoint = URL + "/getReservedTimes";
@@ -70,6 +70,7 @@ public class BookingService {
 
             //Crea un objeto JSON con los datos de la peticion
             JSONObject bookingData = new JSONObject();
+            bookingData.put("_id", _id);
             bookingData.put("type", selectedType.getValue());
             bookingData.put("from", from.getTimeInMillis());
             bookingData.put("to", to.getTimeInMillis());
