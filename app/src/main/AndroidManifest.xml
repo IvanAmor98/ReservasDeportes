@@ -25,10 +25,12 @@
         android:theme="@style/Theme.ReservasDeportes">
         <activity
             android:name=".controller.QrCodeScannerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.AdminMenuActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -48,37 +50,47 @@
         <activity
             android:name=".ui.AboutActivity"
             android:exported="false"
-            android:theme="@style/myDialog" />
+            android:theme="@style/myDialog"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.paypal.PaypalActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.booking.BookingQRActivity"
             android:exported="false"
-            android:theme="@style/myDialog" />
+            android:theme="@style/myDialog"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.booking.BookingListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.facility.FacilityListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.MapsFragment"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.booking.BookingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.MainMenuActivity"
             android:exported="true"
             android:label="@string/title_activity_main_menu"
-            android:theme="@style/Theme.ReservasDeportes.NoActionBar" />
+            android:theme="@style/Theme.ReservasDeportes.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.signup.SignupActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.login.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

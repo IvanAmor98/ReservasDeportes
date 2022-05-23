@@ -103,7 +103,7 @@ public class MainMenuActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences("logData", MODE_PRIVATE).edit();
         //Borra el contenido del archivo
         editor.clear().apply();
-        Toast.makeText(getApplicationContext(), "Bye " + loggedUserDTO.getDisplayName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.logout) + loggedUserDTO.getDisplayName(), Toast.LENGTH_SHORT).show();
 
         //Lanza un intent al activity de login
         Intent intent = new Intent(this, LoginActivity.class);
